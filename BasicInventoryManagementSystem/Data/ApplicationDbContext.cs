@@ -12,5 +12,7 @@ namespace BasicInventoryManagementSystem.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Sale> Sales { get; set; }
+
+        public DbSet<Purchase> Purchases { get; set; }
     }
 }
