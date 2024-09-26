@@ -3,6 +3,7 @@ using BasicInventoryManagementSystem.Models;
 using BasicInventoryManagementSystem.Data;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
@@ -31,12 +32,12 @@ namespace BasicInventoryManagementSystem.Controllers
         // POST: Product/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Product product)
+        public async Task<IActionResult> Create(Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Products.Add(product);
-                _context.SaveChanges();
+                await _context.Products.AddAsync(product);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -56,7 +57,7 @@ namespace BasicInventoryManagementSystem.Controllers
         // POST: Product/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Product product)
+        public async Task<IActionResult> Edit(int id, Product product)
         {
             if (id != product.Id)
             {
@@ -66,7 +67,7 @@ namespace BasicInventoryManagementSystem.Controllers
             if (ModelState.IsValid)
             {
                 _context.Update(product);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -83,16 +84,16 @@ namespace BasicInventoryManagementSystem.Controllers
             return View(product);
         }
 
-        // POST: Product/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Product/DeleteConfirmed
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = _context.Products.Find(id);
+            var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
                 _context.Products.Remove(product);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
         }
