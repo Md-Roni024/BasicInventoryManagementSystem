@@ -1,0 +1,39 @@
+﻿@model IEnumerable<BasicInventoryManagementSystem.Models.Sale>
+
+@{
+    ViewData["Title"] = "Sales List";
+}
+
+<h1>Sales</h1>
+<a asp-action="Create" class="btn btn-primary mb-3">Create New Sale</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Seller</th>
+            <th>Created Date</th>
+            <th>Updated Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sale in Model)
+        {
+            <tr>
+                <td>@sale.Product?.Name</td>
+                <td>@sale.Quantity</td>
+                <td>@sale.Price.ToString("C")</td>
+                <td>@sale.Seller</td>
+                <td>@sale.CreatedDate.ToString("g")</td>
+                <td>@sale.UpdatedDate.ToString("g")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@sale.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@sale.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

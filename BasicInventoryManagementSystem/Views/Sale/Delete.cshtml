@@ -1,0 +1,31 @@
+﻿@model BasicInventoryManagementSystem.Models.Sale
+
+@{
+    ViewData["Title"] = "Delete Sale";
+}
+
+<h1>Delete Sale</h1>
+<div class="alert alert-warning">
+    Are you sure you want to delete this sale?
+</div>
+
+<div>
+    <h4>Sale</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Product</dt>
+        <dd>@Model.Product?.Name</dd>
+        <dt>Quantity</dt>
+        <dd>@Model.Quantity</dd>
+        <dt>Price</dt>
+        <dd>@Model.Price.ToString("C")</dd>
+        <dt>Seller</dt>
+        <dd>@Model.Seller</dd>
+    </dl>
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
