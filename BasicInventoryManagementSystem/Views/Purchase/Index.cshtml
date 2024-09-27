@@ -1,37 +1,37 @@
 ﻿@model IEnumerable<BasicInventoryManagementSystem.Models.Purchase>
 
 @{
-    ViewData["Title"] = "Purchases";
+    ViewData["Title"] = "Purchases List";
 }
 
 <h1>Purchases</h1>
-<hr />
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Purchase</a>
-</p>
-<table class="table">
+<a asp-action="Create" class="btn btn-primary mb-3">Create New Purchase</a>
+
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>Product</th>
             <th>Quantity</th>
             <th>Price</th>
             <th>Supplier</th>
-            <th>Date</th>
-            <th></th>
+            <th>Created Date</th>
+            <th>Updated Date</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var purchase in Model)
         {
             <tr>
-                <td>@purchase.Product.Name</td>
+                <td>@purchase.Product?.Name</td>
                 <td>@purchase.Quantity</td>
-                <td>@purchase.Price</td>
-                <td>@purchase.Supplier</td>
-                <td>@purchase.PurchaseDate.ToShortDateString()</td>
+                <td>@purchase.Price.ToString("C")</td>
+                <td>@purchase.Suppliere</td> <!-- Assuming "Suppliere" is correct, change to Supplier if needed -->
+                <td>@purchase.CreatedDate.ToString("g")</td>
+                <td>@purchase.UpdatedDate.ToString("g")</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@purchase.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@purchase.Id">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@purchase.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@purchase.Id" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
         }

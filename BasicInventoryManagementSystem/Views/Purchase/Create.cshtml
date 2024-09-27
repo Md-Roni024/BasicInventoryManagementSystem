@@ -1,36 +1,50 @@
-﻿@model BasicInventoryManagementSystem.Models.Purchase
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@model BasicInventoryManagementSystem.Models.Purchase
 
 @{
     ViewData["Title"] = "Create Purchase";
 }
 
 <h1>Create Purchase</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<form asp-action="Create">
-    <div class="form-group">
-        <label asp-for="ProductId" class="control-label"></label>
-        <select asp-for="ProductId" class="form-control" asp-items="ViewBag.ProductId"></select>
-        <span asp-validation-for="ProductId" class="text-danger"></span>
+            <div class="form-group">
+                <label asp-for="ProductId" class="control-label"></label>
+                <select asp-for="ProductId" class="form-control" asp-items="ViewBag.ProductId">
+                    <option value="">-- Select Product --</option>
+                </select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Suppliere" class="control-label"></label>
+                <input asp-for="Suppliere" class="form-control" />
+                <span asp-validation-for="Suppliere" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="Quantity" class="control-label"></label>
-        <input asp-for="Quantity" class="form-control" />
-        <span asp-validation-for="Quantity" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Price" class="control-label"></label>
-        <input asp-for="Price" class="form-control" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Supplier" class="control-label"></label>
-        <input asp-for="Supplier" class="form-control" />
-        <span asp-validation-for="Supplier" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-primary" />
-    </div>
-</form>
+</div>
 
 <div>
     <a asp-action="Index">Back to List</a>
