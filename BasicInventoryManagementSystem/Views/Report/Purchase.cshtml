@@ -1,0 +1,48 @@
+﻿@model IEnumerable<BasicInventoryManagementSystem.Models.Purchase>
+
+@{
+    ViewData["Title"] = "Purchase Report";
+    var currentMonth = DateTime.UtcNow.ToString("MMMM");
+    var currentYear = DateTime.UtcNow.Year;
+}
+
+<h1>Purchase Report for @currentMonth @currentYear</h1>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Supplier</th>
+            <th>Created Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var purchase in Model)
+            {
+                <tr>
+                    <td>@purchase.Product?.Name ?? "N/A"</td>
+                    <td>@purchase.Quantity</td>
+                    <td>@purchase.Price.ToString("C")</td>
+                    <td>@purchase.Suppliere</td>
+                    <td>@purchase.CreatedDate.ToString("g")</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">No purchases found for this month.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>Total Purchases This Month: @ViewBag.TotalPurchases.ToString("C")</p>
+
+<div>
+    <a asp-action="DownloadPurchaseReport" class="btn btn-primary">Download Purchase Report</a>
+</div>
