@@ -1,0 +1,45 @@
+﻿@model IEnumerable<BasicInventoryManagementSystem.Models.Product>
+
+@{
+    ViewData["Title"] = "Product Report";
+    var currentMonthName = DateTime.UtcNow.ToString("MMMM");
+    var currentYear = DateTime.UtcNow.Year;
+}
+
+<h1>Inventory Status Report of @currentMonthName @currentYear</h1>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Created Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Quantity</td>
+                    <td>@product.Price.ToString("C")</td>
+                    <td>@product.CreatedDate.ToString("g")</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" class="text-center">No products found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p>Total Products: @ViewBag.TotalProducts</p>
+
+<div>
+    <a asp-action="DownloadInventoryReport" class="btn btn-primary">Download Inventory Report</a>
+</div>

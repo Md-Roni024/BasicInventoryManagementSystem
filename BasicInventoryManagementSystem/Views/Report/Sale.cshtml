@@ -1,0 +1,47 @@
+﻿@model IEnumerable<BasicInventoryManagementSystem.Models.Sale>
+
+@{
+    ViewData["Title"] = "Sale Report";
+    var currentMonthName = DateTime.UtcNow.ToString("MMMM");
+    var currentYear = DateTime.UtcNow.Year;
+}
+
+<h1>Sale Report of @currentMonthName @currentYear</h1>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Seller</th>
+            <th>Created Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var sale in Model)
+            {
+                <tr>
+                    <td>@sale.Product?.Name</td>
+                    <td>@sale.Quantity</td>
+                    <td>@sale.Price.ToString("C")</td>
+                    <td>@sale.Seller</td>
+                    <td>@sale.CreatedDate.ToString("g")</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">No sales found for this month.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p>Total Sales This Month: @ViewBag.TotalSales.ToString("C")</p>
+
+<div>
+    <a asp-action="DownloadSaleReport" class="btn btn-primary">Download Sale Report</a>
+</div>

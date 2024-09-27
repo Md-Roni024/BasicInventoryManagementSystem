@@ -24,7 +24,7 @@
             foreach (var purchase in Model)
             {
                 <tr>
-                    <td>@purchase.Product?.Name ?? "N/A"</td>
+                    <td>@purchase.Product?.Name</td>
                     <td>@purchase.Quantity</td>
                     <td>@purchase.Price.ToString("C")</td>
                     <td>@purchase.Suppliere</td>

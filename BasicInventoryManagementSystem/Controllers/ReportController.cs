@@ -34,7 +34,6 @@ namespace BasicInventoryManagementSystem.Controllers
             return View(purchases);
         }
 
-        // New action for downloading the CSV report
         public IActionResult DownloadPurchaseReport()
         {
             var firstDayOfCurrentMonth = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
@@ -47,7 +46,6 @@ namespace BasicInventoryManagementSystem.Controllers
 
             var totalPurchases = purchases.Sum(p => p.Price * p.Quantity);
 
-            // Create CSV file content
             var csvBuilder = new StringBuilder();
             csvBuilder.AppendLine("Product,Quantity,Price,Supplier,Created Date");
             foreach (var purchase in purchases)
@@ -56,10 +54,83 @@ namespace BasicInventoryManagementSystem.Controllers
             }
             csvBuilder.AppendLine($"Total Purchases,,{totalPurchases},,");
 
-            // Generate file name with current month and year
             var currentMonthName = DateTime.UtcNow.ToString("MMMM");
             var currentYear = DateTime.UtcNow.Year;
             var fileName = $"PurchaseReport-{currentMonthName}-{currentYear}.csv";
+            var bytes = Encoding.UTF8.GetBytes(csvBuilder.ToString());
+
+            return File(bytes, "text/csv", fileName);
+        }
+
+        // New action for Sale Report
+        public IActionResult Sale()
+        {
+            var firstDayOfCurrentMonth = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+            var lastDayOfCurrentMonth = firstDayOfCurrentMonth.AddMonths(1).AddDays(-1);
+
+            var sales = _context.Sales
+                .Where(s => s.CreatedDate >= firstDayOfCurrentMonth && s.CreatedDate <= lastDayOfCurrentMonth)
+                .Include(s => s.Product)
+                .ToList();
+
+            var totalSales = sales.Sum(s => s.Price * s.Quantity);
+            ViewBag.TotalSales = totalSales;
+
+            return View(sales);
+        }
+
+        // New action for downloading the Sale CSV report
+        public IActionResult DownloadSaleReport()
+        {
+            var firstDayOfCurrentMonth = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+            var lastDayOfCurrentMonth = firstDayOfCurrentMonth.AddMonths(1).AddDays(-1);
+
+            var sales = _context.Sales
+                .Where(s => s.CreatedDate >= firstDayOfCurrentMonth && s.CreatedDate <= lastDayOfCurrentMonth)
+                .Include(s => s.Product)
+                .ToList();
+
+            var totalSales = sales.Sum(s => s.Price * s.Quantity);
+
+            var csvBuilder = new StringBuilder();
+            csvBuilder.AppendLine("Product,Quantity,Price,Seller,Created Date");
+            foreach (var sale in sales)
+            {
+                csvBuilder.AppendLine($"{sale.Product?.Name ?? "N/A"},{sale.Quantity},{sale.Price},{sale.Seller},{sale.CreatedDate.ToString("g")}");
+            }
+            csvBuilder.AppendLine($"Total Sales,,{totalSales},,");
+
+            var currentMonthName = DateTime.UtcNow.ToString("MMMM");
+            var currentYear = DateTime.UtcNow.Year;
+            var fileName = $"SaleReport-{currentMonthName}-{currentYear}.csv";
+            var bytes = Encoding.UTF8.GetBytes(csvBuilder.ToString());
+
+            return File(bytes, "text/csv", fileName);
+        }
+
+        // New action for Product Report
+        public IActionResult InventoryStatus()
+        {
+            var products = _context.Products.ToList(); // Get all products from the database
+            return View(products); // Pass the products to the view
+        }
+
+        // New action for downloading the Product CSV report
+        public IActionResult DownloadProductReport()
+        {
+            var products = _context.Products.ToList();
+
+            // Create CSV file content
+            var csvBuilder = new StringBuilder();
+            csvBuilder.AppendLine("Product Name,Quantity,Price,Created Date");
+            foreach (var product in products)
+            {
+                csvBuilder.AppendLine($"{product.Name},{product.Quantity},{product.Price},{product.CreatedDate.ToString("g")}");
+            }
+
+            var currentMonthName = DateTime.UtcNow.ToString("MMMM");
+            var currentYear = DateTime.UtcNow.Year;
+            var fileName = $"ProductReport-{currentMonthName}-{currentYear}.csv";
             var bytes = Encoding.UTF8.GetBytes(csvBuilder.ToString());
 
             return File(bytes, "text/csv", fileName);
