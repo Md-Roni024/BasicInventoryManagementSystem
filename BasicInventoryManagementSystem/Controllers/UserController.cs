@@ -141,6 +141,7 @@
 using BasicInventoryManagementSystem.Models;
 using BasicInventoryManagementSystem.ViewModel;
 using BasicInventoryManagementSystem.ViewModel.UserViewModel;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -230,5 +231,14 @@ namespace BasicInventoryManagementSystem.Controllers
             }
             return View(model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(); 
+            return RedirectToAction("Login", "User"); 
+        }
+
     }
 }
