@@ -1,16 +1,12 @@
-﻿using BasicInventoryManagementSystem.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using BasicInventoryManagementSystem.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
+using BasicInventoryManagementSystem.Data;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
-    [Authorize]
     public class SaleController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,14 +19,17 @@ namespace BasicInventoryManagementSystem.Controllers
         // GET: Sale
         public async Task<IActionResult> Index()
         {
-            var sales = await _context.Sales.Include(s => s.Product).ToListAsync();
+            var sales = await _context.Sales
+                .Include(s => s.Product) // Include the related Product
+                .ToListAsync();
             return View(sales);
         }
 
         // GET: Sale/Create
         public IActionResult Create()
         {
-            PrepareProductDropdown();
+            ViewBag.Products = _context.Products.ToList(); // Get products for dropdown
+            ViewBag.Categories = _context.Categories.ToList(); // Get categories for dropdown
             return View();
         }
 
@@ -41,49 +40,76 @@ namespace BasicInventoryManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check if the sale quantity is less than or equal to the product's available quantity
                 var product = await _context.Products.FindAsync(sale.ProductId);
-                if (product == null)
+                if (product == null || sale.Quantity > product.Quantity)
                 {
-                    ModelState.AddModelError("", "Selected product does not exist.");
-                    PrepareProductDropdown();
+                    ModelState.AddModelError("Quantity", "Sale quantity must be less than or equal to the available product quantity.");
+                    ViewBag.Products = _context.Products.ToList();
+                    ViewBag.Categories = _context.Categories.ToList();
                     return View(sale);
                 }
 
-                if (product.Quantity < sale.Quantity)
-                {
-                    ModelState.AddModelError("", "Not enough stock for this sale.");
-                    PrepareProductDropdown();
-                    return View(sale);
-                }
-
-                sale.CreatedDate = DateTime.UtcNow;
-                _context.Sales.Add(sale);
-                product.Quantity -= sale.Quantity;
-                _context.Update(product);
-
+                // Add the sale
+                _context.Add(sale);
+                product.Quantity -= sale.Quantity; // Decrease the product quantity
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            PrepareProductDropdown();
+            // Repopulate ViewBag in case of validation failure
+            ViewBag.Products = _context.Products.ToList();
+            ViewBag.Categories = _context.Categories.ToList();
             return View(sale);
         }
 
-        // GET: Sale/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Sale/Delete/5
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var sale = await _context.Sales.FindAsync(id);
+            var sale = await _context.Sales
+                .Include(s => s.Product) // Include related Product details
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (sale == null)
             {
                 return NotFound();
             }
 
-            PrepareProductDropdown(sale.ProductId);
+            return View(sale);
+        }
+
+        // POST: Sale/DeleteConfirmed/5
+        [HttpPost, ActionName("DeleteConfirmed")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var sale = await _context.Sales.FindAsync(id);
+            if (sale != null)
+            {
+                var product = await _context.Products.FindAsync(sale.ProductId);
+                if (product != null)
+                {
+                    product.Quantity += sale.Quantity; // Increase the product quantity
+                }
+
+                _context.Sales.Remove(sale);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Sale/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            var sale = await _context.Sales
+                .Include(s => s.Product) // Include related Product details
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (sale == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Products = await _context.Products.ToListAsync(); // Get products for dropdown
+            ViewBag.Categories = await _context.Categories.ToListAsync(); // Get categories for dropdown
             return View(sale);
         }
 
@@ -101,34 +127,34 @@ namespace BasicInventoryManagementSystem.Controllers
             {
                 try
                 {
-                    var originalSale = await _context.Sales.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id);
-                    if (originalSale == null)
+                    // Retrieve the existing sale
+                    var existingSale = await _context.Sales
+                        .Include(s => s.Product) // Include the related Product
+                        .FirstOrDefaultAsync(m => m.Id == id);
+
+                    if (existingSale == null)
                     {
                         return NotFound();
                     }
 
+                    // Check if the new quantity is valid compared to the product's quantity
                     var product = await _context.Products.FindAsync(sale.ProductId);
-                    if (product == null)
+                    if (product == null || sale.Quantity > product.Quantity + existingSale.Quantity)
                     {
-                        ModelState.AddModelError("", "Selected product does not exist.");
-                        PrepareProductDropdown(sale.ProductId);
+                        ModelState.AddModelError("Quantity", "Sale quantity must be less than or equal to the available product quantity.");
+                        ViewBag.Products = await _context.Products.ToListAsync();
+                        ViewBag.Categories = await _context.Categories.ToListAsync();
                         return View(sale);
                     }
 
-                    int quantityDifference = sale.Quantity - originalSale.Quantity;
+                    // Update product quantity
+                    product.Quantity = product.Quantity + existingSale.Quantity - sale.Quantity; // Adjust product quantity
 
-                    if (product.Quantity < quantityDifference)
-                    {
-                        ModelState.AddModelError("", "Not enough stock for this sale update.");
-                        PrepareProductDropdown(sale.ProductId);
-                        return View(sale);
-                    }
-
-                    sale.UpdatedDate = DateTime.UtcNow;
-                    _context.Update(sale);
-
-                    product.Quantity -= quantityDifference;
-                    _context.Update(product);
+                    // Update existing sale properties
+                    existingSale.ProductId = sale.ProductId; // Update product id
+                    existingSale.Quantity = sale.Quantity; // Update quantity
+                    // Update other properties as needed
+                    // existingSale.OtherProperty = sale.OtherProperty;
 
                     await _context.SaveChangesAsync();
                 }
@@ -140,69 +166,22 @@ namespace BasicInventoryManagementSystem.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Concurrency error. Please try again.");
+                        throw;
                     }
                 }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", $"Error occurred while updating the sale: {ex.Message}");
-                }
-
                 return RedirectToAction(nameof(Index));
             }
 
-            PrepareProductDropdown(sale.ProductId);
+            // Repopulate ViewBag in case of validation failure
+            ViewBag.Products = await _context.Products.ToListAsync();
+            ViewBag.Categories = await _context.Categories.ToListAsync();
             return View(sale);
         }
 
-        // GET: Sale/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var sale = await _context.Sales.Include(s => s.Product).FirstOrDefaultAsync(m => m.Id == id);
-            if (sale == null)
-            {
-                return NotFound();
-            }
-
-            return View(sale);
-        }
-
-        // POST: Sale/Delete/5
-        [HttpPost, ActionName("DeleteConfirmed")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var sale = await _context.Sales.FindAsync(id);
-            if (sale != null)
-            {
-                var product = await _context.Products.FindAsync(sale.ProductId);
-                if (product != null)
-                {
-                    product.Quantity += sale.Quantity;
-                    _context.Update(product);
-                }
-
-                _context.Sales.Remove(sale);
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
+        // Check if Sale exists
         private bool SaleExists(int id)
         {
             return _context.Sales.Any(e => e.Id == id);
-        }
-
-        private void PrepareProductDropdown(int? selectedProductId = null)
-        {
-            var products = _context.Products.ToList();
-            ViewData["ProductId"] = new SelectList(products, "Id", "Name", selectedProductId);
         }
     }
 }

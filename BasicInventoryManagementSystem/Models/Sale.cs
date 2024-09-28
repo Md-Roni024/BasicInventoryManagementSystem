@@ -13,8 +13,11 @@ namespace BasicInventoryManagementSystem.Models
         [ForeignKey("Product")]
         public int ProductId { get; set; }
 
-        // Mark Product as nullable or use 'required' if you don't want null values
         public Product? Product { get; set; }
+
+        [Required]
+        [ForeignKey("Category")]
+        public string CategoryName { get; set; } = string.Empty; // Ensure it is not null
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1.")]
@@ -24,7 +27,6 @@ namespace BasicInventoryManagementSystem.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
 
-        // Initialize Seller to prevent nullability warning or use 'required'
         public string Seller { get; set; } = string.Empty;
 
         [DataType(DataType.DateTime)]

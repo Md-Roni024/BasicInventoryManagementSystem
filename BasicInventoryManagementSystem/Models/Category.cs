@@ -4,12 +4,12 @@ namespace BasicInventoryManagementSystem.Models
 {
     public class Category
     {
-        public int Id { get; set; } // Primary Key
+        public int Id { get; set; }
 
-        public string CategoryName { get; set; } // Name of the category
+        public string CategoryName { get; set; } 
 
-        public DateTime CreatedDate { get; set; } // Date when the category was created
+        public DateTime CreatedDate { get; set; } 
 
-        public DateTime UpdatedDate { get; set; } // Date when the category was last updated
+        public DateTime UpdatedDate { get; set; } 
     }
 }

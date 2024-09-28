@@ -9,20 +9,23 @@ namespace BasicInventoryManagementSystem.Models
         [Key]
         public int Id { get; set; }
 
-        // Initialize Name and Category to avoid null warnings
         [Required]
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        public string Category { get; set; } = string.Empty;
+        [ForeignKey("Category")]
+        public string CategoryName { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1.")] 
         public int Quantity { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
 
-        // New property to track when the product was created
         [DataType(DataType.DateTime)]
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+
+        [DataType(DataType.DateTime)]
+        public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
     }
 }

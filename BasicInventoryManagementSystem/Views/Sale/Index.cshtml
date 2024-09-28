@@ -4,31 +4,32 @@
     ViewData["Title"] = "Sales List";
 }
 
-<h1>Sales</h1>
-<a asp-action="Create" class="btn btn-primary mb-3">Create New Sale</a>
+<h2>Sales List</h2>
 
-<table class="table table-bordered table-striped">
+<table class="table">
     <thead>
         <tr>
             <th>Product</th>
+            <th>Category</th>
             <th>Quantity</th>
             <th>Price</th>
             <th>Seller</th>
             <th>Created Date</th>
             <th>Updated Date</th>
-            <th>Actions</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var sale in Model)
         {
             <tr>
-                <td>@sale.Product?.Name</td>
+                <td>@sale.Product?.Name</td> <!-- Assuming Product has a Name property -->
+                <td>@sale.CategoryName</td>
                 <td>@sale.Quantity</td>
                 <td>@sale.Price.ToString("C")</td>
                 <td>@sale.Seller</td>
-                <td>@sale.CreatedDate.ToString("g")</td>
-                <td>@sale.UpdatedDate.ToString("g")</td>
+                <td>@sale.CreatedDate</td>
+                <td>@sale.UpdatedDate</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@sale.Id" class="btn btn-warning">Edit</a>
                     <a asp-action="Delete" asp-route-id="@sale.Id" class="btn btn-danger">Delete</a>
@@ -37,3 +38,5 @@
         }
     </tbody>
 </table>
+
+<a asp-action="Create" class="btn btn-primary">Create New Sale</a>

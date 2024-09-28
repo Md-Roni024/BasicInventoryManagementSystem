@@ -15,7 +15,7 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Category</th>
+            <th>Category</th>  <!-- Changed from CategoryId to Category -->
             <th>Price</th>
             <th>Quantity</th>
             <th>Actions</th>
@@ -27,7 +27,7 @@
             <tr>
                 <td>@product.Id</td>
                 <td>@product.Name</td>
-                <td>@product.Category</td>
+                <td>@product.CategoryName</td> <!-- This will show the category name -->
                 <td>@product.Price.ToString("C")</td>
                 <td>@product.Quantity</td>
                 <td>
