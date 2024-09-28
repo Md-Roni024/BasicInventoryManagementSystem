@@ -162,6 +162,7 @@ namespace BasicInventoryManagementSystem.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            ViewData["IsRegisterPage"] = true;
             return View();
         }
 
@@ -210,6 +211,7 @@ namespace BasicInventoryManagementSystem.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            ViewData["IsLoginPage"] = true;
             return View();
         }
 

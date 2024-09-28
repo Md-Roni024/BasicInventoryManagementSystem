@@ -6,9 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using BasicInventoryManagementSystem.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
+    [Authorize]
     public class ReportController : Controller
     {
         private readonly ApplicationDbContext _context;

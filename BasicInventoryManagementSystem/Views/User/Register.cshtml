@@ -1,6 +1,7 @@
 ﻿@model BasicInventoryManagementSystem.ViewModel.UserViewModel.UserViewModel
 @{
     ViewData["Title"] = "Register";
+    ViewData["IsRegisterPage"] = true; // Set to identify that this is the register page
 }
 
 <div class="container mt-5">
@@ -29,6 +30,9 @@
         <a asp-action="Login">Already have an account? Login</a>
     </p>
 </div>
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
