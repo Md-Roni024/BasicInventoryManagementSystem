@@ -1,0 +1,56 @@
+﻿@model BasicInventoryManagementSystem.Models.Category
+
+@{
+    ViewData["Title"] = "Delete Category";
+}
+
+<h2>Delete Category</h2>
+
+<div>
+    <h4>Are you sure you want to delete this category?</h4>
+    <h5>@Model.CategoryName</h5>
+</div>
+
+<form id="deleteForm" asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</form>
+
+<!-- JavaScript Confirmation Function -->
+<script>
+    function confirmDelete() {
+        if (confirm("Are you sure you want to delete this category?")) {
+            document.getElementById('deleteForm').submit();
+        }
+    }
+</script>
+
+<!-- Include Bootstrap Toast (optional) -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Toast Notification -->
+<div class="toast" style="position: absolute; top: 10px; right: 10px; display: none;" id="toast">
+    <div class="toast-header">
+        <strong class="mr-auto">Delete Confirmation</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+    </div>
+    <div class="toast-body">
+        Category deleted successfully!
+    </div>
+</div>
+
+<script>
+    // Show the toast notification on successful delete
+    $(document).ready(function () {
+        // Check if there's a query parameter for deletion status
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('deleted')) {
+            $('#toast').toast({ delay: 3000 });
+            $('#toast').toast('show');
+        }
+    });
+</script>
