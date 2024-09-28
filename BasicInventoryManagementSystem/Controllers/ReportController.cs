@@ -52,7 +52,7 @@ namespace BasicInventoryManagementSystem.Controllers
             csvBuilder.AppendLine("Product,Quantity,Price,Supplier,Created Date");
             foreach (var purchase in purchases)
             {
-                csvBuilder.AppendLine($"{purchase.Product?.Name ?? "N/A"},{purchase.Quantity},{purchase.Price},{purchase.Suppliere},{purchase.CreatedDate.ToString("g")}");
+                csvBuilder.AppendLine($"{purchase.Product?.Name ?? "N/A"},{purchase.Quantity},{purchase.Price},{purchase.Supplier},{purchase.CreatedDate.ToString("g")}");
             }
             csvBuilder.AppendLine($"Total Purchases,,{totalPurchases},,");
 

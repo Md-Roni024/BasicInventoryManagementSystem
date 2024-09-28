@@ -86,6 +86,10 @@ namespace BasicInventoryManagementSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -98,7 +102,7 @@ namespace BasicInventoryManagementSystem.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("Suppliere")
+                    b.Property<string>("Supplier")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

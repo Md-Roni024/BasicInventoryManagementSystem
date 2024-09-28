@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BasicInventoryManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240928152147_InitialMigration")]
+    [Migration("20240928180122_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -89,6 +89,10 @@ namespace BasicInventoryManagementSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -101,7 +105,7 @@ namespace BasicInventoryManagementSystem.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("Suppliere")
+                    b.Property<string>("Supplier")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

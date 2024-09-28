@@ -17,7 +17,7 @@ namespace BasicInventoryManagementSystem.Models
 
         [Required]
         [ForeignKey("Category")]
-        public string CategoryName { get; set; } = string.Empty; 
+        public string CategoryName { get; set; } = string.Empty; // Ensure it is not null
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1.")]
@@ -27,7 +27,7 @@ namespace BasicInventoryManagementSystem.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
 
-        public string Suppliere { get; set; } = string.Empty;
+        public string Supplier { get; set; } = string.Empty;
 
         [DataType(DataType.DateTime)]
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
