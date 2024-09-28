@@ -144,6 +144,7 @@ using BasicInventoryManagementSystem.ViewModel.UserViewModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Threading.Tasks;
 
@@ -158,6 +159,13 @@ namespace BasicInventoryManagementSystem.Controllers
         {
             _userManager = userManager;
             _signInManager = signInManager;
+        }
+
+
+        public async Task<IActionResult> Index()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            return View(users);
         }
 
         [HttpGet]
@@ -238,6 +246,36 @@ namespace BasicInventoryManagementSystem.Controllers
         {
             await HttpContext.SignOutAsync(); 
             return RedirectToAction("Login", "User"); 
+        }
+
+
+        // GET: User/Delete/{id}
+        public async Task<IActionResult> Delete(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
+
+        // POST: User/DeleteConfirmed
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                var result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    // Redirect with query parameter to show toast notification
+                    return RedirectToAction("Index", new { deleted = true });
+                }
+                // Handle errors if any
+            }
+            return RedirectToAction("Index");
         }
 
     }
