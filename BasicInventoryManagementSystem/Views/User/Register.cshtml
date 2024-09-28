@@ -1,5 +1,4 @@
-﻿@model BasicInventoryManagementSystem.Models.User
-
+﻿@model BasicInventoryManagementSystem.ViewModel.UserViewModel.UserViewModel
 @{
     ViewData["Title"] = "Register";
 }
@@ -7,7 +6,7 @@
 <div class="container mt-5">
     <h2>Register</h2>
 
-    <form asp-action="Register" method="post">
+    <form asp-controller="User" asp-action="Register" method="post">
         <div class="mb-3">
             <label asp-for="Name" class="form-label"></label>
             <input asp-for="Name" class="form-control" />
@@ -30,3 +29,6 @@
         <a asp-action="Login">Already have an account? Login</a>
     </p>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

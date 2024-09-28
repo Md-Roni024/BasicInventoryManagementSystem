@@ -5,7 +5,7 @@
 namespace BasicInventoryManagementSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTable : Migration
+    public partial class UpdateUserViewMOdel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
