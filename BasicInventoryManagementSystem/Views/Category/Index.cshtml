@@ -20,9 +20,14 @@
         border-radius: 0.25rem; /* Optional: Rounded corners */
     }
 
-    /* Border for the table header */
-    .table thead th {
-        border-bottom: 1.5px solid #dadada; /* Change the border color to gray */
+        /* Border for the table header */
+        .table thead th {
+            border-bottom: 1.5px solid #dadada; /* Change the border color to gray */
+        }
+
+    .search-input {
+        width: 300px; /* Set width for search input */
+        margin-right: 10px; /* Margin for spacing */
     }
 </style>
 
@@ -30,7 +35,7 @@
     <h4>Category List</h4>
     <div class="d-flex justify-content-between gap-3">
         <form asp-action="Index" method="get" class="form-inline d-flex justify-content-lg-end">
-            <input type="text" name="search" class="form-control" placeholder="Search Categories" />
+            <input type="text" name="search" class="form-control search-input" placeholder="Search Categories" />
             <button type="submit" class="btn btn-secondary btn-sm">Search</button>
         </form>
         <a asp-action="Create" class="btn btn-primary btn-sm">Add New Category</a>

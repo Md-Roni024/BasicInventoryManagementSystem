@@ -4,11 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using BasicInventoryManagementSystem.Data;
-using Microsoft.AspNetCore.Authorization;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
-    [Authorize]
     public class PurchaseController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,16 +17,29 @@ namespace BasicInventoryManagementSystem.Controllers
         }
 
         // GET: Purchase
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var purchases = await _context.Purchases
+        //        .Include(p => p.Product) // Include the related Product
+        //        .ToListAsync();
+        //    return View(purchases);
+        //}
+
+        public IActionResult Index(string? search)
         {
-            var purchases = await _context.Purchases
+            // Query the sales table and include the related Product
+            var purchases = _context.Purchases
                 .Include(p => p.Product) // Include the related Product
-                .ToListAsync();
-            return View(purchases);
+                .AsQueryable();
+            if (!string.IsNullOrEmpty(search))
+            {
+                purchases = purchases.Where(s => s.Product.Name.Contains(search) ||
+                                         s.CategoryName.Contains(search));
+            }
+
+            return View(purchases.ToList());
         }
 
-
-        [Authorize(Roles = "SuperAdmin, Admin")]
         // GET: Purchase/Create
         public IActionResult Create()
         {
@@ -65,7 +76,6 @@ namespace BasicInventoryManagementSystem.Controllers
             return View(purchase);
         }
 
-        [Authorize(Roles = "SuperAdmin, Admin")]
         // GET: Purchase/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
@@ -80,7 +90,6 @@ namespace BasicInventoryManagementSystem.Controllers
             return View(purchase);
         }
 
-        [Authorize(Roles = "SuperAdmin, Admin")]
         // POST: Purchase/DeleteConfirmed/5
         [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
@@ -101,8 +110,6 @@ namespace BasicInventoryManagementSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-        [Authorize(Roles = "SuperAdmin, Admin")]
         // GET: Purchase/Edit/5
         public async Task<IActionResult> Edit(int id)
         {

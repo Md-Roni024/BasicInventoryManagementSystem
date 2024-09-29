@@ -168,21 +168,46 @@ namespace BasicInventoryManagementSystem.Controllers
 
 
         [Authorize(Roles = "SuperAdmin")]
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+
+        //    var users = _userManager.Users.ToList();
+        //    var userRoles = new Dictionary<string, string>();
+
+        //    foreach (var user in users)
+        //    {
+        //        var roles = await _userManager.GetRolesAsync(user);
+        //        userRoles[user.Id] = roles.Count > 0 ? string.Join(", ", roles) : "No roles assigned";
+        //    }
+
+        //    ViewBag.UserRoles = userRoles;
+        //    return View(users);
+        //}
+        public async Task<IActionResult> Index(string? search)
         {
+            // Retrieve all users
+            var users = _userManager.Users.AsQueryable(); // Make it a queryable to allow filtering
 
-            var users = _userManager.Users.ToList();
+            // Apply search filtering if search term is provided
+            if (!string.IsNullOrEmpty(search))
+            {
+                users = users.Where(u => u.Name.Contains(search) || u.Email.Contains(search)); // Filter by Name or Email
+            }
+
+            // Convert to list for further processing
+            var userList = await users.ToListAsync();
+
             var userRoles = new Dictionary<string, string>();
-
-            foreach (var user in users)
+            foreach (var user in userList)
             {
                 var roles = await _userManager.GetRolesAsync(user);
                 userRoles[user.Id] = roles.Count > 0 ? string.Join(", ", roles) : "No roles assigned";
             }
 
             ViewBag.UserRoles = userRoles;
-            return View(users);
+            return View(userList); // Return the filtered user list
         }
+
 
         [HttpGet]
         public IActionResult Register()

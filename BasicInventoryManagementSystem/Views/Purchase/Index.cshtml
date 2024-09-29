@@ -9,20 +9,22 @@
         text-align: center;
     }
 
-    /* Add horizontal lines between rows */
     .table tbody tr {
         border-bottom: 2px solid #dadada; /* Bootstrap's default border color */
     }
 
-    /* Add border to the entire table */
     .table {
         border: 2px solid #dadada; /* Customize the border color as needed */
         border-radius: 0.25rem; /* Optional: Rounded corners */
     }
 
-    /* Border for the table header */
-    .table thead th {
-        border-bottom: 1.5px solid #dadada; /* Change the border color to gray */
+        .table thead th {
+            border-bottom: 1.5px solid #dadada; /* Change the border color to gray */
+        }
+
+    .search-input {
+        width: 300px;
+        margin-right: 10px;
     }
 </style>
 
@@ -30,7 +32,7 @@
     <h4>Purchases List</h4>
     <div class="d-flex justify-content-between gap-3">
         <form asp-action="Index" method="get" class="form-inline d-flex justify-content-lg-end">
-            <input type="text" name="search" class="form-control" placeholder="Search Purchases" />
+            <input type="text" name="search" class="form-control search-input" placeholder="Search purchases by product or category" />
             <button type="submit" class="btn btn-secondary btn-sm">Search</button>
         </form>
         <a asp-action="Create" class="btn btn-primary btn-sm">Create Purchase</a>
@@ -41,6 +43,7 @@
     <thead>
         <tr>
             <th scope="col">Product</th>
+            <th scope="col">Category</th>
             <th scope="col">Quantity</th>
             <th scope="col">Price</th>
             <th scope="col">Supplier</th>
@@ -54,6 +57,7 @@
         {
             <tr>
                 <td>@purchase.Product?.Name</td>
+                <td>@purchase.CategoryName</td>
                 <td>@purchase.Quantity</td>
                 <td>@purchase.Price.ToString("C")</td>
                 <td>@purchase.Supplier</td>

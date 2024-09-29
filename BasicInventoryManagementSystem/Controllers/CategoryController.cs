@@ -17,10 +17,23 @@ namespace BasicInventoryManagementSystem.Controllers
         }
 
         // GET: Categories
-        public IActionResult Index()
+        //public IActionResult Index()
+        //{
+        //    var categories = _context.Categories.ToList();
+        //    return View(categories);
+        //}
+        public IActionResult Index(string? search)
         {
-            var categories = _context.Categories.ToList();
-            return View(categories);
+            var categories = _context.Categories.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                // Filter by name or category
+                categories = categories.Where(p => p.CategoryName.Contains(search) ||
+                                                p.CategoryName.Contains(search));
+            }
+
+            return View(categories.ToList());
         }
 
         [Authorize(Roles = "SuperAdmin, Admin")]

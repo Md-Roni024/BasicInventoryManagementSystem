@@ -4,11 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using BasicInventoryManagementSystem.Data;
-using Microsoft.AspNetCore.Authorization;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
-    [Authorize(Roles = "SuperAdmin, Admin")]
     public class SaleController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,13 +16,21 @@ namespace BasicInventoryManagementSystem.Controllers
             _context = context;
         }
 
-        // GET: Sale
-        public async Task<IActionResult> Index()
+         //GET: Sale
+
+        public IActionResult Index(string? search)
         {
-            var sales = await _context.Sales
+            // Query the sales table and include the related Product
+            var sales = _context.Sales
                 .Include(s => s.Product) // Include the related Product
-                .ToListAsync();
-            return View(sales);
+                .AsQueryable();
+            if (!string.IsNullOrEmpty(search))
+            {
+                sales = sales.Where(s => s.Product.Name.Contains(search) ||
+                                         s.CategoryName.Contains(search));
+            }
+
+            return View(sales.ToList());
         }
 
         // GET: Sale/Create
