@@ -2,9 +2,11 @@
 using BasicInventoryManagementSystem.Models;
 using System.Linq;
 using BasicInventoryManagementSystem.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;

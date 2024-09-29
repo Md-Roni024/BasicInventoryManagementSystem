@@ -142,6 +142,7 @@ using BasicInventoryManagementSystem.Models;
 using BasicInventoryManagementSystem.ViewModel;
 using BasicInventoryManagementSystem.ViewModel.UserViewModel;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -162,6 +163,7 @@ namespace BasicInventoryManagementSystem.Controllers
         }
 
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -249,6 +251,8 @@ namespace BasicInventoryManagementSystem.Controllers
         }
 
 
+
+        [Authorize]
         // GET: User/Delete/{id}
         public async Task<IActionResult> Delete(string id)
         {

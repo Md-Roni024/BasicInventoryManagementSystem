@@ -10,10 +10,10 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
+            <th>Id</th>
             <th>Name</th>
             <th>Email</th>
             <th>Created Date</th>
-            <th>Updated Date</th>
             <th>Actions</th>
             <th>User Role</th>
         </tr>
@@ -22,12 +22,12 @@
         @foreach (var user in Model)
         {
             <tr>
+                <td>@user.Id</td>
                 <td>@user.Name</td> 
                 <td>@user.Email</td> 
                 <td>@user.CreatedDate.ToString("g")</td> 
-                <td>@user.UpdatedDate.ToString("g")</td> 
                 <td>
-                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning">Assign Roles</a>
                     <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger">Delete</a>
                 </td>
             </tr>

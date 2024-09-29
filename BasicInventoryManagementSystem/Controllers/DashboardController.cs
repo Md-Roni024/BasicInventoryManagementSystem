@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BasicInventoryManagementSystem.Models;
 using BasicInventoryManagementSystem.Data;
+using Microsoft.AspNetCore.Authorization;
 
 public class DashboardController : Controller
 {
@@ -15,6 +16,7 @@ public class DashboardController : Controller
         _context = context;
     }
 
+    [Authorize]
     public async Task<IActionResult> Index()
     {
         var currentMonth = DateTime.Now.Month;

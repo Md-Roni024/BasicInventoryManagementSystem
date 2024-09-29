@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using BasicInventoryManagementSystem.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
+    [Authorize]
     public class PurchaseController : Controller
     {
         private readonly ApplicationDbContext _context;
