@@ -13,70 +13,103 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
+                <div class="d-flex align-items-center w-100">
+                    <!-- Left Side: Home with Icon -->
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-home fa-sm"></i> 
+                    </a>
 
-                @if (User.Identity?.IsAuthenticated == true && !isLoginPage && !isRegisterPage)
-                {
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark" href="#" id="transactionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Transaction
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="transactionDropdown">
-                                    <li><a class="dropdown-item" asp-controller="Product" asp-action="Index">Products</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Sale" asp-action="Index">Sales</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Purchase" asp-action="Index">Purchase</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-dark" href="#" id="reportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Report
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="reportDropdown">
-                                    <li><a class="dropdown-item" asp-controller="Report" asp-action="InventoryStatus">Inventory Report</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Report" asp-action="Sale">Sales</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Report" asp-action="Purchase">Purchase</a></li>
-                                </ul>
-                            </li>
-                            <li><a class="dropdown-item" asp-controller="Category" asp-action="Index">Categories</a></li>
-                            <li><a class="dropdown-item" asp-controller="User" asp-action="Index">All Users</a></li>
-                            <li><a class="dropdown-item" asp-controller="Roles" asp-action="Index">Roles</a></li>
-                            <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Index">Dashboard</a></li>
-                        </ul>
-                        <div class="d-flex">
-                            <form asp-controller="User" asp-action="Logout" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-link nav-link text-dark">Logout</button>
-                            </form>
+                    @if (User.Identity?.IsAuthenticated == true && !isLoginPage && !isRegisterPage)
+                    {
+                        <div class="ms-auto d-flex">
+                            <!-- Use ms-auto to push items to the right -->
+                            <ul class="navbar-nav flex-grow-1">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="transactionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-exchange-alt fa-sm"></i> Transaction
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="transactionDropdown">
+                                        <li><a class="dropdown-item" asp-controller="Product" asp-action="Index"><i class="fas fa-box fa-sm"></i> Products</a></li>
+                                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                                        {
+                                            <li><a class="dropdown-item" asp-controller="Sale" asp-action="Index"><i class="fas fa-shopping-cart fa-sm"></i> Sales</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Purchase" asp-action="Index"><i class="fas fa-receipt fa-sm"></i> Purchase</a></li>
+                                        }
+                                    </ul>
+                                </li>
+                                @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                                {
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle text-dark" href="#" id="reportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-chart-line fa-sm"></i> Report
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="reportDropdown">
+                                            <li><a class="dropdown-item" asp-controller="Report" asp-action="InventoryStatus"><i class="fas fa-clipboard-list fa-sm"></i> Inventory Report</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Report" asp-action="Sale"><i class="fas fa-chart-bar fa-sm"></i> Sales</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Report" asp-action="Purchase"><i class="fas fa-chart-pie fa-sm"></i> Purchase</a></li>
+                                        </ul>
+                                    </li>
+                                }
+                                <li><a class="dropdown-item" asp-controller="Category" asp-action="Index"><i class="fas fa-tags fa-sm"></i> Categories</a></li>
+                                @if (User.IsInRole("SuperAdmin"))
+                                {
+                                    <li><a class="dropdown-item" asp-controller="User" asp-action="Index"><i class="fas fa-users fa-sm"></i> Users</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Roles" asp-action="Index"><i class="fas fa-user-shield fa-sm"></i> Roles</a></li>
+                                }
+                                @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="fas fa-tachometer-alt fa-sm"></i> Dashboard</a></li>
+                                }
+                            </ul>
+                            <div class="d-flex">
+                                <form asp-controller="User" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-link nav-link text-dark"><i class="fas fa-sign-out-alt fa-sm"></i> Logout</button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                }
-
+                    }
+                </div>
             </div>
         </nav>
     </header>
+
 
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+
     @if (User.Identity?.IsAuthenticated == true && !isLoginPage && !isRegisterPage)
     {
-        <footer class="border-top footer text-muted">
+        <footer class="border-top footer text-muted py-4 bg-light text-center">
             <div class="container">
-                &copy; 2024 - BasicInventoryManagementSystem - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                <!-- Copyright and Privacy Policy -->
+                <div>
+                    <span>&copy; 2024 - BasicInventoryManagementSystem</span>
+                    <br />
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-primary">Privacy Policy</a>
+                </div>
+                <br />
+                <!-- Social Media Icons -->
+                <div>
+                    <a href="#" class="text-dark me-3"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-dark me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-dark me-3"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="text-dark"><i class="fab fa-instagram"></i></a>
+                </div>
             </div>
         </footer>
     }
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

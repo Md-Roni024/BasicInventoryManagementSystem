@@ -4,15 +4,30 @@
     ViewData["Title"] = "Assign Role";
 }
 
-<h1>Assign Role to @Model.UserName</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm" style="background-color:#eeeeee;">
+                <div class="card-header bg-secondary text-white text-center">
+                    <h2>Assign Role to @Model.UserName</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="AssignRole" method="post">
+                        <input type="hidden" asp-for="UserId" />
 
-<form asp-action="AssignRole" method="post">
-    <div class="form-group">
-        <label asp-for="SelectedRole" class="control-label">Select Role</label>
-        <select asp-for="SelectedRole" class="form-control" asp-items="Model.Roles"></select>
-        <span asp-validation-for="SelectedRole" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="SelectedRole" class="form-label"></label>
+                            <select asp-for="SelectedRole" class="form-control" asp-items="Model.Roles">
+                                <option value="">Select Role</option>
+                            </select>
+                            <span asp-validation-for="SelectedRole" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Assign Role</button>
+                        <a asp-action="Index" class="btn btn-secondary w-100 mt-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <input type="hidden" asp-for="UserId" />
-    <button type="submit" class="btn btn-primary">Assign Role</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+</div>

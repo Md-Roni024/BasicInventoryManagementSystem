@@ -2,44 +2,88 @@
     ViewData["Title"] = "Dashboard - This Month";
 }
 
-<!-- Use Bootstrap for a modern, responsive layout -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+@section Styles {
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif; /* Cleaner font */
+            background-color: #f8f9fa; /* Subtle background color */
+        }
 
-<div class="container mt-4">
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .card-text {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            margin-bottom: 2rem;
+        }
+
+
+    </style>
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Dashboard Overview</h2>
+
     <div class="row">
         <!-- Summary Cards -->
-        <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3">
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-primary mb-4">
                 <div class="card-body">
                     <h5 class="card-title">Total Sales</h5>
-                    <p class="card-text">@ViewBag.TotalSales</p>
+                    <p class="card-text display-5">@ViewBag.TotalSales</p>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-success mb-3">
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-success mb-4">
                 <div class="card-body">
                     <h5 class="card-title">Total Purchases</h5>
-                    <p class="card-text">@ViewBag.TotalPurchases</p>
+                    <p class="card-text display-5">@ViewBag.TotalPurchases</p>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-warning mb-3">
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-warning mb-4">
                 <div class="card-body">
                     <h5 class="card-title">Quantity Sold</h5>
-                    <p class="card-text">@ViewBag.TotalQuantitySold</p>
+                    <p class="card-text display-5">@ViewBag.TotalQuantitySold</p>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card text-white bg-danger mb-3">
+        <div class="col-md-3 col-sm-6">
+            <div class="card text-white bg-danger mb-4">
                 <div class="card-body">
                     <h5 class="card-title">Quantity Purchased</h5>
-                    <p class="card-text">@ViewBag.TotalQuantityPurchased</p>
+                    <p class="card-text display-5">@ViewBag.TotalQuantityPurchased</p>
                 </div>
             </div>
         </div>
@@ -51,8 +95,8 @@
         <div class="col-md-6 mb-4">
             <div class="card">
                 <div class="card-header bg-info text-white">Sales Chart</div>
-                <div class="card-body">
-                    <canvas id="salesChart" height="200"></canvas>
+                <div class="chart-container">
+                    <canvas id="salesChart"></canvas>
                 </div>
             </div>
         </div>
@@ -61,8 +105,8 @@
         <div class="col-md-6 mb-4">
             <div class="card">
                 <div class="card-header bg-secondary text-white">Purchases Chart</div>
-                <div class="card-body">
-                    <canvas id="purchaseChart" height="200"></canvas>
+                <div class="chart-container">
+                    <canvas id="purchaseChart"></canvas>
                 </div>
             </div>
         </div>
@@ -73,76 +117,109 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header bg-dark text-white">Product Distribution</div>
-                <div class="card-body">
-                    <canvas id="productPieChart" height="200"></canvas>
+                <div class="chart-container">
+                    <canvas id="productPieChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Include Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-    // Sales Chart
-    var salesCtx = document.getElementById('salesChart').getContext('2d');
-    var salesData = @Html.Raw(Json.Serialize(ViewBag.SalesData));
-    var salesChart = new Chart(salesCtx, {
-        type: 'bar',
-        data: {
-            labels: salesData.map(s => s.Day),
-            datasets: [{
-                label: 'Total Sales',
-                data: salesData.map(s => s.TotalSales),
-                backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                tooltip: {
-                    enabled: true,
-                    callbacks: {
-                        label: function (tooltipItem) {
-                            return 'Sales: $' + tooltipItem.raw;
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Sales Chart
+        var salesCtx = document.getElementById('salesChart').getContext('2d');
+        var salesData = @Html.Raw(Json.Serialize(ViewBag.SalesData));
+        var salesChart = new Chart(salesCtx, {
+            type: 'bar',
+            data: {
+                labels: salesData.map(s => s.Day),
+                datasets: [{
+                    label: 'Total Sales',
+                    data: salesData.map(s => s.TotalSales),
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return 'Sales: $' + tooltipItem.raw;
+                            }
                         }
                     }
                 }
             }
-        }
-    });
+        });
 
-    // Purchases Chart
-    var purchaseCtx = document.getElementById('purchaseChart').getContext('2d');
-    var purchaseData = @Html.Raw(Json.Serialize(ViewBag.PurchaseData));
-    var purchaseChart = new Chart(purchaseCtx, {
-        type: 'line',
-        data: {
-            labels: purchaseData.map(p => p.Day),
-            datasets: [{
-                label: 'Total Purchases',
-                data: purchaseData.map(p => p.TotalPurchases),
-                backgroundColor: 'rgba(75, 192, 192, 0.7)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                tooltip: {
-                    enabled: true,
-                    callbacks: {
-                        label: function (tooltipItem) {
-                            return 'Purchases: $' + tooltipItem.raw;
+        // Purchases Chart
+        var purchaseCtx = document.getElementById('purchaseChart').getContext('2d');
+        var purchaseData = @Html.Raw(Json.Serialize(ViewBag.PurchaseData));
+        var purchaseChart = new Chart(purchaseCtx, {
+            type: 'line',
+            data: {
+                labels: purchaseData.map(p => p.Day),
+                datasets: [{
+                    label: 'Total Purchases',
+                    data: purchaseData.map(p => p.TotalPurchases),
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return 'Purchases: $' + tooltipItem.raw;
+                            }
                         }
                     }
                 }
             }
-        }
-    });
+        });
 
-</script>
+        // Product Distribution Pie Chart
+        var productPieCtx = document.getElementById('productPieChart').getContext('2d');
+        var productDistributionData = @Html.Raw(Json.Serialize(ViewBag.ProductDistributionData));
+        var productPieChart = new Chart(productPieCtx, {
+            type: 'pie',
+            data: {
+                labels: productDistributionData.map(p => p.ProductName),
+                datasets: [{
+                    label: 'Product Distribution',
+                    data: productDistributionData.map(p => p.Quantity),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(255, 159, 64, 0.7)',
+                        'rgba(255, 205, 86, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(54, 162, 235, 0.7)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

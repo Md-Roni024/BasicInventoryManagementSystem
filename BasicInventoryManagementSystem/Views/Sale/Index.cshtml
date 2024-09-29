@@ -4,19 +4,50 @@
     ViewData["Title"] = "Sales List";
 }
 
-<h2>Sales List</h2>
+<style>
+    .table td, .table th {
+        text-align: center;
+    }
 
-<table class="table">
+    /* Add horizontal lines between rows */
+    .table tbody tr {
+        border-bottom: 2px solid #dadada; /* Bootstrap's default border color */
+    }
+
+    /* Add border to the entire table */
+    .table {
+        border: 2px solid #dadada; /* Customize the border color as needed */
+        border-radius: 0.25rem; /* Optional: Rounded corners */
+    }
+
+    /* Border for the table header */
+    .table thead th {
+        border-bottom: 1.5px solid #dadada; /* Change the border color to gray */
+    }
+</style>
+
+<div class="d-flex justify-content-between mb-3">
+    <h4>Sales List</h4>
+    <div class="d-flex justify-content-between gap-3">
+        <form asp-action="Index" method="get" class="form-inline d-flex justify-content-lg-end">
+            <input type="text" name="search" class="form-control" placeholder="Search Sales" />
+            <button type="submit" class="btn btn-secondary btn-sm">Search</button>
+        </form>
+        <a asp-action="Create" class="btn btn-primary btn-sm">Create Sale</a>
+    </div>
+</div>
+
+<table class="table table-striped table-hover">
     <thead>
         <tr>
-            <th>Product</th>
-            <th>Category</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Seller</th>
-            <th>Created Date</th>
-            <th>Updated Date</th>
-            <th></th>
+            <th scope="col">Product</th>
+            <th scope="col">Category</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th scope="col">Seller</th>
+            <th scope="col">Created Date</th>
+            <th scope="col">Updated Date</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -28,15 +59,13 @@
                 <td>@sale.Quantity</td>
                 <td>@sale.Price.ToString("C")</td>
                 <td>@sale.Seller</td>
-                <td>@sale.CreatedDate</td>
-                <td>@sale.UpdatedDate</td>
+                <td>@sale.CreatedDate.ToShortDateString()</td>
+                <td>@sale.UpdatedDate.ToShortDateString()</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@sale.Id" class="btn btn-warning">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@sale.Id" class="btn btn-danger">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@sale.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@sale.Id" class="btn btn-danger btn-sm">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-<a asp-action="Create" class="btn btn-primary">Create New Sale</a>

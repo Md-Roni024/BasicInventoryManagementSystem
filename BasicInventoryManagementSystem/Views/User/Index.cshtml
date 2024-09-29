@@ -1,61 +1,46 @@
-﻿@*
-
-@model IEnumerable<BasicInventoryManagementSystem.Models.User>
+﻿@model IEnumerable<BasicInventoryManagementSystem.Models.User>
 
 @{
     ViewData["Title"] = "User List";
 }
 
-<h1>Users</h1>
-<a asp-action="Create" class="btn btn-primary mb-3">Create New User</a>
+<style>
+    .table td, .table th {
+        text-align: center;
+    }
 
-<table class="table table-bordered table-striped">
+    /* Add horizontal lines between rows */
+    .table tbody tr {
+        border-bottom: 2px solid #dadada; /* Bootstrap's default border color */
+    }
+
+    /* Add border to the entire table */
+    .table {
+        border: 2px solid #dadada; /* Customize the border color as needed */
+        border-radius: 0.25rem; /* Optional: Rounded corners */
+    }
+
+    /* Border for the table header */
+    .table thead th {
+        border-bottom: 1.5px solid #dadada; /* Change the border color to gray */
+    }
+</style>
+
+<div class="d-flex justify-content-between mb-3">
+    <h4>User List</h4>
+    <div class="d-flex justify-content-between gap-3">
+        <a asp-action="Register" class="btn btn-primary btn-sm">Create New User</a>
+    </div>
+</div>
+
+<table class="table table-striped table-hover">
     <thead>
         <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Created Date</th>
-            <th>Actions</th>
-            <th>User Role</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.Id</td>
-                <td>@user.Name</td>
-                <td>@user.Email</td>
-                <td>@user.CreatedDate.ToString("g")</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning">Assign Roles</a>
-                    <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-*@
-
-@model IEnumerable<BasicInventoryManagementSystem.Models.User>
-
-@{
-    ViewData["Title"] = "User List";
-}
-
-<h1>Users</h1>
-<a asp-action="Create" class="btn btn-primary mb-3">Create New User</a>
-
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Created Date</th>
-            <th>Actions</th>
-            <th>User Role</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Created Date</th>
+            <th scope="col">Actions</th>
+            <th scope="col">User Role</th>
         </tr>
     </thead>
     <tbody>
@@ -66,8 +51,8 @@
                 <td>@user.Email</td>
                 <td>@user.CreatedDate.ToString("g")</td>
                 <td>
-                    <a asp-action="AssignRole" asp-route-id="@user.Id" class="btn btn-warning">Assign Roles</a>
-                    <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger">Delete</a>
+                    <a asp-action="AssignRole" asp-route-id="@user.Id" class="btn btn-warning btn-sm">Assign Roles</a>
+                    <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger btn-sm">Delete</a>
                 </td>
                 <td>@ViewBag.UserRoles[user.Id]</td>
             </tr>

@@ -4,42 +4,89 @@
     ViewData["Title"] = "Product Report";
     var currentMonthName = DateTime.UtcNow.ToString("MMMM");
     var currentYear = DateTime.UtcNow.Year;
+
+    // Initialize totals
+    decimal totalPrice = 0;
+    int totalQuantity = 0;
+
+    // Calculate totals
+    var productList = Model.ToList();
+    if (productList.Any())
+    {
+        foreach (var product in productList)
+        {
+            totalPrice += product.Price * product.Quantity; // Assuming Price is per item
+            totalQuantity += product.Quantity;
+        }
+    }
 }
 
-<h1>Inventory Status Report of @currentMonthName @currentYear</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Inventory Status Report of @currentMonthName @currentYear</h1>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Product Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Created Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
-        {
-            foreach (var product in Model)
-            {
-                <tr>
-                    <td>@product.Name</td>
-                    <td>@product.Quantity</td>
-                    <td>@product.Price.ToString("C")</td>
-                    <td>@product.CreatedDate.ToString("g")</td>
-                </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="4" class="text-center">No products found.</td>
-            </tr>
-        }
-    </tbody>
-</table>
-<p>Total Products: @ViewBag.TotalProducts</p>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (productList != null && productList.Any())
+                    {
+                        // Display only the first 10 products
+                        foreach (var product in productList.Take(10))
+                        {
+                            <tr>
+                                <td>@product.Name</td>
+                                <td>@product.Quantity</td>
+                                <td>@product.Price.ToString("C")</td>
+                            </tr>
+                        }
 
-<div>
-    <a asp-action="DownloadProductReport" class="btn btn-primary">Download Inventory Report</a>
+                        // Add total rows for the displayed items
+                        <tr class="font-weight-bold">
+                            <td>Total for displayed items</td>
+                            <td>@productList.Take(10).Sum(p => p.Quantity)</td>
+                            <td>@productList.Take(10).Sum(p => p.Price * p.Quantity).ToString("C")</td>
+                        </tr>
+
+                        // Display a message indicating how many total products exist
+                        <tr>
+                            <td colspan="3" class="text-center">Total Products: @productList.Count()</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center">No products found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="text-center mt-3">
+                <a asp-action="DownloadProductReport" class="btn btn-primary">Download Inventory Report</a>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    h1 {
+        font-size: 2.5rem;
+        color: #24873f;
+    }
+
+    .table th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+</style>

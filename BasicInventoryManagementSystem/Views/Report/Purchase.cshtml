@@ -4,45 +4,85 @@
     ViewData["Title"] = "Purchase Report";
     var currentMonth = DateTime.UtcNow.ToString("MMMM");
     var currentYear = DateTime.UtcNow.Year;
+
+    // Initialize totals
+    decimal totalPrice = 0;
+    int totalQuantity = 0;
+
+    // Calculate totals
+    if (Model != null && Model.Any())
+    {
+        foreach (var purchase in Model)
+        {
+            totalPrice += purchase.Price * purchase.Quantity; // Assuming Price is per item
+            totalQuantity += purchase.Quantity;
+        }
+    }
 }
 
-<h1>Purchase Report for @currentMonth @currentYear</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Purchase Report for @currentMonth @currentYear</h1>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Supplier</th>
-            <th>Created Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
-        {
-            foreach (var purchase in Model)
-            {
-                <tr>
-                    <td>@purchase.Product?.Name</td>
-                    <td>@purchase.Quantity</td>
-                    <td>@purchase.Price.ToString("C")</td>
-                    <td>@purchase.Supplier</td>
-                    <td>@purchase.CreatedDate.ToString("g")</td>
-                </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="5" class="text-center">No purchases found for this month.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Supplier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var purchase in Model)
+                        {
+                            <tr>
+                                <td>@purchase.Product?.Name</td>
+                                <td>@purchase.Quantity</td>
+                                <td>@purchase.Price.ToString("C")</td>
+                                <td>@purchase.Supplier</td>
+                            </tr>
+                        }
 
-<p>Total Purchases This Month: @ViewBag.TotalPurchases.ToString("C")</p>
+                        // Add total rows
+                        <tr class="font-weight-bold">
+                            <td>Total</td>
+                            <td>@totalQuantity</td>
+                            <td>@totalPrice.ToString("C")</td>
+                            <td colspan="2"></td> <!-- Empty cells for alignment -->
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No purchases found for this month.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
 
-<div>
-    <a asp-action="DownloadPurchaseReport" class="btn btn-primary">Download Purchase Report</a>
+            <div class="text-center mt-3">
+                <a asp-action="DownloadPurchaseReport" class="btn btn-primary">Download Purchase Report</a>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    h1 {
+        font-size: 2.5rem;
+        color: #24873f;
+    }
+
+    .table th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+</style>
