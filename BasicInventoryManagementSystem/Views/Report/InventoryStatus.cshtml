@@ -29,6 +29,7 @@
             <table class="table table-bordered table-striped table-hover">
                 <thead class="thead-dark">
                     <tr>
+                        <th>Serial No.</th> <!-- Added Serial No. Column -->
                         <th>Product Name</th>
                         <th>Quantity</th>
                         <th>Price</th>
@@ -38,38 +39,37 @@
                     @if (productList != null && productList.Any())
                     {
                         // Display only the first 10 products
+                        int serialNumber = 1; // Initialize serial number
                         foreach (var product in productList.Take(10))
                         {
                             <tr>
+                                <td>@serialNumber</td> <!-- Display Serial Number -->
                                 <td>@product.Name</td>
                                 <td>@product.Quantity</td>
                                 <td>@product.Price.ToString("C")</td>
                             </tr>
+                            serialNumber++; // Increment serial number
                         }
 
                         // Add total rows for the displayed items
                         <tr class="font-weight-bold">
-                            <td>Total for displayed items</td>
-                            <td>@productList.Take(10).Sum(p => p.Quantity)</td>
-                            <td>@productList.Take(10).Sum(p => p.Price * p.Quantity).ToString("C")</td>
-                        </tr>
-
-                        // Display a message indicating how many total products exist
-                        <tr>
-                            <td colspan="3" class="text-center">Total Products: @productList.Count()</td>
+                            <td></td>
+                            <td></td>
+                            <td>Total Quantity: @productList.Take(10).Sum(p => p.Quantity)</td>
+                            <td>Total Price: @productList.Take(10).Sum(p => p.Price * p.Quantity).ToString("C")</td>
                         </tr>
                     }
                     else
                     {
                         <tr>
-                            <td colspan="3" class="text-center">No products found.</td>
+                            <td colspan="4" class="text-center">No products found.</td>
                         </tr>
                     }
                 </tbody>
             </table>
 
             <div class="text-center mt-3">
-                <a asp-action="DownloadProductReport" class="btn btn-primary">Download Inventory Report</a>
+                <a asp-action="DownloadProductReport" class="btn btn-warning">Download Inventory Report</a>
             </div>
         </div>
     </div>
@@ -82,8 +82,8 @@
     }
 
     .table th {
-        background-color: #007bff;
-        color: white;
+        background-color: #ffc107;
+        color: black;
     }
 
     .table td {

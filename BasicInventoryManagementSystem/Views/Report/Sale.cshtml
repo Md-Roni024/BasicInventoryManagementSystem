@@ -10,9 +10,10 @@
     int totalQuantity = 0;
 
     // Calculate totals
-    if (Model != null && Model.Any())
+    var saleList = Model.ToList();
+    if (saleList.Any())
     {
-        foreach (var sale in Model)
+        foreach (var sale in saleList)
         {
             totalPrice += sale.Price * sale.Quantity; // Assuming Price is per item
             totalQuantity += sale.Quantity;
@@ -21,13 +22,14 @@
 }
 
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Sale Report of @currentMonthName @currentYear</h1>
+    <h1 class="text-center mb-4">Sale Report for @currentMonthName @currentYear</h1>
 
     <div class="card shadow-sm">
         <div class="card-body">
             <table class="table table-bordered table-striped table-hover">
                 <thead class="thead-dark">
                     <tr>
+                        <th>Serial No.</th> <!-- Added Serial No. Column -->
                         <th>Product</th>
                         <th>Quantity</th>
                         <th>Price</th>
@@ -35,24 +37,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model != null && Model.Any())
+                    @if (saleList != null && saleList.Any())
                     {
-                        foreach (var sale in Model)
+                        // Display only the first 10 sales
+                        int serialNumber = 1; // Initialize serial number
+                        foreach (var sale in saleList.Take(10))
                         {
                             <tr>
+                                <td>@serialNumber</td> <!-- Display Serial Number -->
                                 <td>@sale.Product?.Name</td>
                                 <td>@sale.Quantity</td>
                                 <td>@sale.Price.ToString("C")</td>
                                 <td>@sale.Seller</td>
                             </tr>
+                            serialNumber++; // Increment serial number
                         }
 
-                        // Add total rows
+                        // Add total rows for the displayed items
                         <tr class="font-weight-bold">
-                            <td>Total</td>
-                            <td>@totalQuantity</td>
-                            <td>@totalPrice.ToString("C")</td>
-                            <td colspan="2"></td> 
+                            <td></td>
+                            <td></td>
+                            <td>Total Quantity: @saleList.Take(10).Sum(s => s.Quantity)</td>
+                            <td>Total Price: @saleList.Take(10).Sum(s => s.Price * s.Quantity).ToString("C")</td>
+                            <td></td> <!-- Empty cell for alignment -->
                         </tr>
                     }
                     else
@@ -65,7 +72,7 @@
             </table>
 
             <div class="text-center mt-3">
-                <a asp-action="DownloadSaleReport" class="btn btn-primary">Download Sale Report</a>
+                <a asp-action="DownloadSaleReport" class="btn btn-warning">Download Sale Report</a>
             </div>
         </div>
     </div>
@@ -78,8 +85,8 @@
     }
 
     .table th {
-        background-color: #007bff;
-        color: white;
+        background-color: #ffc107;
+        color: black;
     }
 
     .table td {
