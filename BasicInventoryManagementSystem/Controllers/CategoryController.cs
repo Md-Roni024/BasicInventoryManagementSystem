@@ -3,6 +3,7 @@ using BasicInventoryManagementSystem.Models;
 using System.Linq;
 using BasicInventoryManagementSystem.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
@@ -43,6 +44,22 @@ namespace BasicInventoryManagementSystem.Controllers
             return View();
         }
 
+        //// POST: Categories/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Create(Category category)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        category.CreatedDate = DateTime.UtcNow; // Set CreatedDate
+        //        category.UpdatedDate = DateTime.UtcNow; // Set UpdatedDate initially
+        //        _context.Categories.Add(category);
+        //        _context.SaveChanges();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(category);
+        //}
+
         // POST: Categories/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -50,11 +67,25 @@ namespace BasicInventoryManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                category.CreatedDate = DateTime.UtcNow; // Set CreatedDate
-                category.UpdatedDate = DateTime.UtcNow; // Set UpdatedDate initially
-                _context.Categories.Add(category);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    category.CreatedDate = DateTime.UtcNow; // Set CreatedDate
+                    category.UpdatedDate = DateTime.UtcNow; // Set UpdatedDate initially
+                    _context.Categories.Add(category);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException dbEx)
+                {
+                    // Log the exception (optional)
+                    // ModelState.AddModelError("", "An error occurred while saving changes to the database. Please try again.");
+                    ModelState.AddModelError(string.Empty, "An error occurred while saving changes to the database: " + dbEx.InnerException?.Message);
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception (optional)
+                    ModelState.AddModelError(string.Empty, "An unexpected error occurred: " + ex.Message);
+                }
             }
             return View(category);
         }
@@ -73,26 +104,67 @@ namespace BasicInventoryManagementSystem.Controllers
         }
 
         // POST: Categories/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Edit(Category category)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var existingCategory = _context.Categories.Find(category.Id);
+        //        if (existingCategory != null)
+        //        {
+        //            existingCategory.CategoryName = category.CategoryName;
+        //            // Do not change CreatedDate
+        //            existingCategory.UpdatedDate = DateTime.UtcNow; // Update the UpdatedDate
+
+        //            _context.Update(existingCategory);
+        //            _context.SaveChanges();
+        //            return RedirectToAction(nameof(Index));
+        //        }
+        //    }
+        //    return View(category);
+        //}
+
+        [Authorize(Roles = "SuperAdmin, Admin")]
+        // POST: Categories/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Category category)
         {
             if (ModelState.IsValid)
             {
-                var existingCategory = _context.Categories.Find(category.Id);
-                if (existingCategory != null)
+                try
                 {
-                    existingCategory.CategoryName = category.CategoryName;
-                    // Do not change CreatedDate
-                    existingCategory.UpdatedDate = DateTime.UtcNow; // Update the UpdatedDate
+                    var existingCategory = _context.Categories.Find(category.Id);
+                    if (existingCategory != null)
+                    {
+                        existingCategory.CategoryName = category.CategoryName;
+                        // Do not change CreatedDate
+                        existingCategory.UpdatedDate = DateTime.UtcNow; // Update the UpdatedDate
 
-                    _context.Update(existingCategory);
-                    _context.SaveChanges();
-                    return RedirectToAction(nameof(Index));
+                        _context.Update(existingCategory);
+                        _context.SaveChanges();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+                catch (DbUpdateException dbEx)
+                {
+                    // Log the exception (optional)
+                    ModelState.AddModelError(string.Empty, "An error occurred while saving changes to the database: " + dbEx.InnerException?.Message);
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception (optional)
+                    ModelState.AddModelError(string.Empty, "An unexpected error occurred: " + ex.Message);
                 }
             }
             return View(category);
         }
+
 
 
         [Authorize(Roles = "SuperAdmin, Admin")]

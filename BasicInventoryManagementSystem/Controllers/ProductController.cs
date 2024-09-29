@@ -115,6 +115,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
@@ -160,20 +161,53 @@ namespace BasicInventoryManagementSystem.Controllers
         }
 
         // POST: Product/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create(Product product)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        await _context.Products.AddAsync(product);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+
+        //    // Repopulate categories if the form submission fails
+        //    var categories = _context.Categories.ToList();
+        //    ViewBag.CategoryName = new SelectList(categories, "CategoryName", "CategoryName");
+        //    return View(product);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product)
         {
             if (ModelState.IsValid)
             {
-                await _context.Products.AddAsync(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _context.Products.AddAsync(product);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException dbEx)
+                {
+                    // Log the exception details
+                    var innerExceptionMessage = dbEx.InnerException?.Message ?? dbEx.Message;
+                    ModelState.AddModelError(string.Empty, "An error occurred while creating the product: " + innerExceptionMessage);
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception details for any other unexpected exceptions
+                    var errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                    ModelState.AddModelError(string.Empty, "An error occurred while creating the product: " + errorMessage);
+                }
             }
 
-            // Repopulate categories if the form submission fails
+            // Repopulate categories in case of an error
             var categories = _context.Categories.ToList();
             ViewBag.CategoryName = new SelectList(categories, "CategoryName", "CategoryName");
+
             return View(product);
         }
 
@@ -194,6 +228,28 @@ namespace BasicInventoryManagementSystem.Controllers
         }
 
         // POST: Product/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, Product product)
+        //{
+        //    if (id != product.Id)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Update(product);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+
+        //    // Repopulate categories if the form submission fails
+        //    var categories = _context.Categories.ToList();
+        //    ViewBag.CategoryName = new SelectList(categories, "CategoryName", "CategoryName", product.CategoryName);
+        //    return View(product);
+        //}
+        // POST: Product/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Product product)
@@ -205,9 +261,24 @@ namespace BasicInventoryManagementSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Update(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Update(product);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException dbEx)
+                {
+                    // Log the exception details
+                    var innerExceptionMessage = dbEx.InnerException?.Message ?? dbEx.Message;
+                    ModelState.AddModelError(string.Empty, "An error occurred while updating the product: " + innerExceptionMessage);
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception details for any other unexpected exceptions
+                    var errorMessage = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                    ModelState.AddModelError(string.Empty, "An error occurred while updating the product: " + errorMessage);
+                }
             }
 
             // Repopulate categories if the form submission fails
@@ -215,6 +286,8 @@ namespace BasicInventoryManagementSystem.Controllers
             ViewBag.CategoryName = new SelectList(categories, "CategoryName", "CategoryName", product.CategoryName);
             return View(product);
         }
+
+
 
         [Authorize(Roles = "SuperAdmin, Admin")]
         // GET: Product/Delete/5

@@ -6,28 +6,25 @@
 
 <style>
     .table td, .table th {
-        text-align: center; /* Center text in table cells */
+        text-align: center; 
     }
 
-    /* Add horizontal lines between rows */
     .table tbody tr {
-        border-bottom: 2px solid #dadada; /* Bootstrap's default border color */
+        border-bottom: 2px solid #dadada; 
     }
-
-    /* Add border to the entire table */
     .table {
-        border: 2px solid #dadada; /* Customize the border color as needed */
-        border-radius: 0.25rem; /* Optional: Rounded corners */
+        border: 2px solid #dadada; 
+        border-radius: 0.25rem; 
     }
 
-        /* Border for the table header */
         .table thead th {
-            border-bottom: 1.5px solid #dadada; /* Change the border color to gray */
+            border-bottom: 1.5px solid #dadada; 
+            background-color: #0d6efd
         }
 
     .search-input {
-        width: 300px; /* Set width for search input */
-        margin-right: 10px; /* Margin for spacing */
+        width: 300px; 
+        margin-right: 10px; 
     }
 </style>
 
@@ -38,7 +35,10 @@
             <input type="text" name="search" class="form-control search-input" placeholder="Search Categories" />
             <button type="submit" class="btn btn-secondary btn-sm">Search</button>
         </form>
-        <a asp-action="Create" class="btn btn-primary btn-sm">Add New Category</a>
+        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-primary btn-sm">Add New Category</a>
+        }
     </div>
 </div>
 

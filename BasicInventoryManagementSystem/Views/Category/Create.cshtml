@@ -12,6 +12,12 @@
                     <h2>Create Category</h2>
                 </div>
                 <div class="card-body">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            <strong>Error!</strong> @ViewData.ModelState.Values.SelectMany(v => v.Errors).FirstOrDefault()?.ErrorMessage
+                        </div>
+                    }
                     <form asp-action="Create" method="post">
                         <div class="mb-3">
                             <label asp-for="CategoryName" class="form-label"></label>

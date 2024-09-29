@@ -15,6 +15,20 @@
                     <form asp-action="Edit" method="post">
                         <input type="hidden" asp-for="Id" />
 
+                        <!-- Display general error messages -->
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger">
+                                <strong>Oops!</strong> There were some problems with your input.
+                                <ul>
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <li>@error.ErrorMessage</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
                         <div class="mb-3">
                             <label asp-for="Name" class="form-label"></label>
                             <input asp-for="Name" class="form-control" placeholder="Enter product name" />
@@ -52,3 +66,4 @@
         </div>
     </div>
 </div>
+

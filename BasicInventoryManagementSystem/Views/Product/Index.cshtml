@@ -35,7 +35,10 @@
             <input type="text" name="search" class="form-control search-input" placeholder="Search product by name or category" />
             <button type="submit" class="btn btn-secondary btn-sm">Search</button>
         </form>
-        <a asp-action="Create" class="btn btn-primary btn-sm">Add Product</a>
+        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-primary btn-sm">Add Product</a>
+        }
     </div>
 </div>
 
