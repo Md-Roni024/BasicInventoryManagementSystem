@@ -24,7 +24,7 @@
                 <div class="d-flex align-items-center w-100">
                     <!-- Left Side: Home with Icon -->
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                        <i class="fas fa-home fa-sm"></i> 
+                        <i class="fas fa-home fa-sm"></i>
                     </a>
 
                     @if (User.Identity?.IsAuthenticated == true && !isLoginPage && !isRegisterPage)
@@ -69,10 +69,23 @@
                                     <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Index"><i class="fas fa-tachometer-alt fa-sm"></i> Dashboard</a></li>
                                 }
                             </ul>
-                            <div class="d-flex">
-                                <form asp-controller="User" asp-action="Logout" method="post" class="d-inline">
-                                    <button type="submit" class="btn btn-link nav-link text-dark"><i class="fas fa-sign-out-alt fa-sm"></i> Logout</button>
-                                </form>
+                            <div class="d-flex me-5">
+                                <!-- User Profile Dropdown -->
+                                <div class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-user-circle fa-lg"></i> <span>Profile</span>
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                
+                                        <li class="dropdown-item text-muted">@User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value</li>
+                                        <li><hr class="dropdown-divider" /></li>
+                                        <li>
+                                            <form asp-controller="User" asp-action="Logout" method="post" class="d-inline">
+                                                <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt fa-sm"></i> Logout</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     }
