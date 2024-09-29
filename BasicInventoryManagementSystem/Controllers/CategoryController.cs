@@ -23,6 +23,7 @@ namespace BasicInventoryManagementSystem.Controllers
             return View(categories);
         }
 
+        [Authorize(Roles = "SuperAdmin, Admin")]
         // GET: Categories/Create
         public IActionResult Create()
         {
@@ -45,6 +46,8 @@ namespace BasicInventoryManagementSystem.Controllers
             return View(category);
         }
 
+
+        [Authorize(Roles = "SuperAdmin, Admin")]
         // GET: Categories/Edit/5
         public IActionResult Edit(int id)
         {
@@ -79,6 +82,7 @@ namespace BasicInventoryManagementSystem.Controllers
         }
 
 
+        [Authorize(Roles = "SuperAdmin, Admin")]
         //Delete
         // GET: Category/Delete/5
         public IActionResult Delete(int id)

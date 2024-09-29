@@ -32,19 +32,24 @@
                         <div class="ms-auto d-flex">
                             <!-- Use ms-auto to push items to the right -->
                             <ul class="navbar-nav flex-grow-1">
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="transactionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fas fa-exchange-alt fa-sm"></i> Transaction
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="transactionDropdown">
-                                        <li><a class="dropdown-item" asp-controller="Product" asp-action="Index"><i class="fas fa-box fa-sm"></i> Products</a></li>
-                                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
-                                        {
+                                @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                                {
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle text-dark" href="#" id="transactionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-exchange-alt fa-sm"></i> Transaction
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="transactionDropdown">
+                                            <li><a class="dropdown-item" asp-controller="Product" asp-action="Index"><i class="fas fa-box fa-sm"></i> Products</a></li>
                                             <li><a class="dropdown-item" asp-controller="Sale" asp-action="Index"><i class="fas fa-shopping-cart fa-sm"></i> Sales</a></li>
                                             <li><a class="dropdown-item" asp-controller="Purchase" asp-action="Index"><i class="fas fa-receipt fa-sm"></i> Purchase</a></li>
-                                        }
-                                    </ul>
-                                </li>
+                                        </ul>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Product" asp-action="Index"><i class="fas fa-box fa-sm"></i> Products</a></li>
+                                }
+
                                 @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
                                 {
                                     <li class="nav-item dropdown">

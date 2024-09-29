@@ -44,7 +44,10 @@
             <th scope="col">Category Name</th>
             <th scope="col">Created Date</th>
             <th scope="col">Updated Date</th>
-            <th scope="col">Actions</th>
+            @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+            {
+                <th scope="col">Actions</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -55,10 +58,13 @@
                 <td>@category.CategoryName</td>
                 <td>@category.CreatedDate.ToString("g")</td>
                 <td>@category.UpdatedDate.ToString("g")</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-warning btn-sm">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger btn-sm">Delete</a>
-                </td>
+                @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>

@@ -8,21 +8,17 @@
     .table td, .table th {
         text-align: center;
     }
-
-    /* Add horizontal lines between rows */
     .table tbody tr {
-        border-bottom: 2px solid #dadada; /* Bootstrap's default border color */
+        border-bottom: 2px solid #dadada;
     }
 
-    /* Add border to the entire table */
     .table {
-        border: 2px solid #dadada; /* Customize the border color as needed */
-        border-radius: 0.25rem; /* Optional: Rounded corners */
+        border: 2px solid #dadada; 
+        border-radius: 0.25rem; 
     }
 
-        /* Border for the table header */
         .table thead th {
-            border-bottom: 1.5px solid #dadada; /* Change the border color to gray */
+            border-bottom: 1.5px solid #dadada; 
         }
 </style>
 
@@ -46,7 +42,10 @@
             <th scope="col">Category</th>
             <th scope="col">Price</th>
             <th scope="col">Quantity</th>
-            <th scope="col">Actions</th>
+            @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+            {
+                <th scope="col">Actions</th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -58,10 +57,13 @@
                 <td>@product.CategoryName</td>
                 <td>@product.Price.ToString("C")</td>
                 <td>@product.Quantity</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning btn-sm">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger btn-sm">Delete</a>
-                </td>
+                @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>

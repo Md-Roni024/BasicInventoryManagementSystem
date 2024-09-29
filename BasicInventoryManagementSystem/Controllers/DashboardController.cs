@@ -22,17 +22,14 @@ public class DashboardController : Controller
         var currentMonth = DateTime.Now.Month;
         var currentYear = DateTime.Now.Year;
 
-        // Total Sales for the current month
         var totalSales = await _context.Sales
             .Where(s => s.CreatedDate.Month == currentMonth && s.CreatedDate.Year == currentYear)
             .SumAsync(s => s.Price * s.Quantity);
 
-        // Total Purchases for the current month
         var totalPurchases = await _context.Purchases
             .Where(p => p.CreatedDate.Month == currentMonth && p.CreatedDate.Year == currentYear)
             .SumAsync(p => p.Price * p.Quantity);
 
-        // Total Quantity Sold
         var totalQuantitySold = await _context.Sales
             .Where(s => s.CreatedDate.Month == currentMonth && s.CreatedDate.Year == currentYear)
             .SumAsync(s => s.Quantity);

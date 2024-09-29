@@ -152,6 +152,7 @@ using System.Threading.Tasks;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
+
     public class UserController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -166,11 +167,9 @@ namespace BasicInventoryManagementSystem.Controllers
         }
 
 
-        [Authorize]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> Index()
         {
-            //var users = await _userManager.Users.ToListAsync();
-            //return View(users);
 
             var users = _userManager.Users.ToList();
             var userRoles = new Dictionary<string, string>();
@@ -267,7 +266,7 @@ namespace BasicInventoryManagementSystem.Controllers
 
 
 
-        [Authorize]
+        [Authorize(Roles = "SuperAdmin")]
         // GET: User/Delete/{id}
         public async Task<IActionResult> Delete(string id)
         {
@@ -298,7 +297,7 @@ namespace BasicInventoryManagementSystem.Controllers
         }
 
 
-        // GET: Users/AssignRole/{id}
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> AssignRole(string id)
         {
             var user = await _userManager.FindByIdAsync(id);

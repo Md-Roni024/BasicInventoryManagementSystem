@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public class ReportController : Controller
     {
         private readonly ApplicationDbContext _context;

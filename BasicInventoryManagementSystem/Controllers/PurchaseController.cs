@@ -27,6 +27,8 @@ namespace BasicInventoryManagementSystem.Controllers
             return View(purchases);
         }
 
+
+        [Authorize(Roles = "SuperAdmin, Admin")]
         // GET: Purchase/Create
         public IActionResult Create()
         {
@@ -63,6 +65,7 @@ namespace BasicInventoryManagementSystem.Controllers
             return View(purchase);
         }
 
+        [Authorize(Roles = "SuperAdmin, Admin")]
         // GET: Purchase/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
@@ -77,6 +80,7 @@ namespace BasicInventoryManagementSystem.Controllers
             return View(purchase);
         }
 
+        [Authorize(Roles = "SuperAdmin, Admin")]
         // POST: Purchase/DeleteConfirmed/5
         [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
@@ -97,6 +101,8 @@ namespace BasicInventoryManagementSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        [Authorize(Roles = "SuperAdmin, Admin")]
         // GET: Purchase/Edit/5
         public async Task<IActionResult> Edit(int id)
         {

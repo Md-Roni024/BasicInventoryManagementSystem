@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public class SaleController : Controller
     {
         private readonly ApplicationDbContext _context;
