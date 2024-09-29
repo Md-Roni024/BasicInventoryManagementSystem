@@ -16,7 +16,7 @@ public class DashboardController : Controller
         _context = context;
     }
 
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public async Task<IActionResult> Index()
     {
         var currentMonth = DateTime.Now.Month;

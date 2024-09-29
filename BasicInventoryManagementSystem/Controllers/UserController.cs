@@ -145,6 +145,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Threading.Tasks;
@@ -155,18 +156,32 @@ namespace BasicInventoryManagementSystem.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
 
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var users = await _userManager.Users.ToListAsync();
+            //var users = await _userManager.Users.ToListAsync();
+            //return View(users);
+
+            var users = _userManager.Users.ToList();
+            var userRoles = new Dictionary<string, string>();
+
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userRoles[user.Id] = roles.Count > 0 ? string.Join(", ", roles) : "No roles assigned";
+            }
+
+            ViewBag.UserRoles = userRoles;
             return View(users);
         }
 
@@ -280,6 +295,65 @@ namespace BasicInventoryManagementSystem.Controllers
                 // Handle errors if any
             }
             return RedirectToAction("Index");
+        }
+
+
+        // GET: Users/AssignRole/{id}
+        public async Task<IActionResult> AssignRole(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(user); // Get user's current roles
+            var allRoles = _roleManager.Roles.ToList(); // Get all available roles
+
+            var model = new AssignRoleViewModel
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                Roles = allRoles.Select(role => new SelectListItem
+                {
+                    Value = role.Name,
+                    Text = role.Name,
+                    Selected = userRoles.Contains(role.Name)
+                }).ToList()
+            };
+
+            return View(model);
+        }
+
+        // POST: Users/AssignRole/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignRole(AssignRoleViewModel model)
+        {
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Remove current roles
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            if (!removeResult.Succeeded)
+            {
+                ModelState.AddModelError("", "Failed to remove current roles.");
+                return View(model);
+            }
+
+            // Add new role
+            var addRoleResult = await _userManager.AddToRoleAsync(user, model.SelectedRole);
+            if (!addRoleResult.Succeeded)
+            {
+                ModelState.AddModelError("", "Failed to add the new role.");
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(Index)); // Redirect back to the user list
         }
 
     }

@@ -1,4 +1,6 @@
-﻿@model IEnumerable<BasicInventoryManagementSystem.Models.User>
+﻿@*
+
+@model IEnumerable<BasicInventoryManagementSystem.Models.User>
 
 @{
     ViewData["Title"] = "User List";
@@ -23,13 +25,51 @@
         {
             <tr>
                 <td>@user.Id</td>
-                <td>@user.Name</td> 
-                <td>@user.Email</td> 
-                <td>@user.CreatedDate.ToString("g")</td> 
+                <td>@user.Name</td>
+                <td>@user.Email</td>
+                <td>@user.CreatedDate.ToString("g")</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning">Assign Roles</a>
                     <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger">Delete</a>
                 </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+*@
+
+@model IEnumerable<BasicInventoryManagementSystem.Models.User>
+
+@{
+    ViewData["Title"] = "User List";
+}
+
+<h1>Users</h1>
+<a asp-action="Create" class="btn btn-primary mb-3">Create New User</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Created Date</th>
+            <th>Actions</th>
+            <th>User Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@user.Email</td>
+                <td>@user.CreatedDate.ToString("g")</td>
+                <td>
+                    <a asp-action="AssignRole" asp-route-id="@user.Id" class="btn btn-warning">Assign Roles</a>
+                    <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger">Delete</a>
+                </td>
+                <td>@ViewBag.UserRoles[user.Id]</td>
             </tr>
         }
     </tbody>
