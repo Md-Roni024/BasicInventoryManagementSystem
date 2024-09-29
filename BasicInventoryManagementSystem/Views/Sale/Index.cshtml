@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BasicInventoryManagementSystem.Models.Sale>
+﻿@model BasicInventoryManagementSystem.ViewModel.SaleIndexViewModel
 
 @{
     ViewData["Title"] = "Sales List";
@@ -20,12 +20,49 @@
 
         .table thead th {
             border-bottom: 1.5px solid #dadada;
+            background-color: #acc3e8;
         }
 
     .search-input {
         width: 300px;
         margin-right: 10px;
     }
+
+    .pagination-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+
+    .pagination {
+        display: inline-flex;
+        list-style: none;
+        padding-left: 0;
+    }
+
+        .pagination .page-item {
+            margin: 0 3px;
+        }
+
+        .pagination .page-link {
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: #007bff;
+            border: 1px solid #007bff;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+            .pagination .page-link:hover {
+                background-color: #0056b3;
+                color: white;
+            }
+
+        .pagination .active .page-link {
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
 </style>
 
 <div class="d-flex justify-content-between mb-3">
@@ -56,10 +93,10 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var sale in Model)
+        @foreach (var sale in Model.Sales)
         {
             <tr>
-                <td>@sale.Product?.Name</td> <!-- Assuming Product has a Name property -->
+                <td>@sale.Product?.Name</td>
                 <td>@sale.CategoryName</td>
                 <td>@sale.Quantity</td>
                 <td>@sale.Price.ToString("C")</td>
@@ -77,3 +114,28 @@
         }
     </tbody>
 </table>
+
+<div class="pagination-container">
+    <ul class="pagination">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)">Previous</a>
+            </li>
+        }
+
+        @for (var i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+            </li>
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)">Next</a>
+            </li>
+        }
+    </ul>
+</div>

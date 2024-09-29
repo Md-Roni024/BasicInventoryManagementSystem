@@ -1,38 +1,18 @@
-﻿@model IEnumerable<BasicInventoryManagementSystem.Models.Purchase>
+﻿@model BasicInventoryManagementSystem.ViewModel.PurchaseIndexViewModel
 
 @{
     ViewData["Title"] = "Purchases List";
 }
 
 <style>
-    .table td, .table th {
-        text-align: center;
-    }
-
-    .table tbody tr {
-        border-bottom: 2px solid #dadada; /* Bootstrap's default border color */
-    }
-
-    .table {
-        border: 2px solid #dadada; /* Customize the border color as needed */
-        border-radius: 0.25rem; /* Optional: Rounded corners */
-    }
-
-        .table thead th {
-            border-bottom: 1.5px solid #dadada; /* Change the border color to gray */
-        }
-
-    .search-input {
-        width: 300px;
-        margin-right: 10px;
-    }
+    /* Your existing styles */
 </style>
 
 <div class="d-flex justify-content-between mb-3">
     <h4>Purchases List</h4>
     <div class="d-flex justify-content-between gap-3">
         <form asp-action="Index" method="get" class="form-inline d-flex justify-content-lg-end">
-            <input type="text" name="search" class="form-control search-input" placeholder="Search purchases by product or category" />
+            <input type="text" name="search" class="form-control search-input" placeholder="Search purchases by product or category" value="@Model.SearchQuery" />
             <button type="submit" class="btn btn-secondary btn-sm">Search</button>
         </form>
         <a asp-action="Create" class="btn btn-primary btn-sm">Create Purchase</a>
@@ -53,7 +33,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var purchase in Model)
+        @foreach (var purchase in Model.Purchases)
         {
             <tr>
                 <td>@purchase.Product?.Name</td>
@@ -71,3 +51,16 @@
         }
     </tbody>
 </table>
+
+<div class="d-flex justify-content-end">
+    <div class="pagination-container">
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-search="@Model.SearchQuery">@i</a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

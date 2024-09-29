@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using BasicInventoryManagementSystem.Data;
+using BasicInventoryManagementSystem.ViewModel;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
@@ -16,29 +17,55 @@ namespace BasicInventoryManagementSystem.Controllers
             _context = context;
         }
 
-        // GET: Purchase
-        //public async Task<IActionResult> Index()
+        //public IActionResult Index(string? search)
         //{
-        //    var purchases = await _context.Purchases
+        //    // Query the sales table and include the related Product
+        //    var purchases = _context.Purchases
         //        .Include(p => p.Product) // Include the related Product
-        //        .ToListAsync();
-        //    return View(purchases);
+        //        .AsQueryable();
+        //    if (!string.IsNullOrEmpty(search))
+        //    {
+        //        purchases = purchases.Where(s => s.Product.Name.Contains(search) ||
+        //                                 s.CategoryName.Contains(search));
+        //    }
+
+        //    return View(purchases.ToList());
         //}
 
-        public IActionResult Index(string? search)
+        public IActionResult Index(string? search, int page = 1, int pageSize = 10)
         {
-            // Query the sales table and include the related Product
+            // Query the purchases table and include the related Product
             var purchases = _context.Purchases
                 .Include(p => p.Product) // Include the related Product
                 .AsQueryable();
+
             if (!string.IsNullOrEmpty(search))
             {
                 purchases = purchases.Where(s => s.Product.Name.Contains(search) ||
-                                         s.CategoryName.Contains(search));
+                                             s.CategoryName.Contains(search));
             }
 
-            return View(purchases.ToList());
+            // Get total count of purchases for pagination
+            var totalPurchases = purchases.Count();
+
+            // Calculate the total number of pages
+            var totalPages = (int)Math.Ceiling(totalPurchases / (double)pageSize);
+
+            // Get the purchases for the current page
+            var purchasesToDisplay = purchases.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            // Create a view model to hold purchases and pagination info
+            var viewModel = new PurchaseIndexViewModel
+            {
+                Purchases = purchasesToDisplay,
+                CurrentPage = page,
+                TotalPages = totalPages,
+                SearchQuery = search
+            };
+
+            return View(viewModel);
         }
+
 
         // GET: Purchase/Create
         public IActionResult Create()

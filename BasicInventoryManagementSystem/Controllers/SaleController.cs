@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 using BasicInventoryManagementSystem.Data;
+using BasicInventoryManagementSystem.ViewModel;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
@@ -16,22 +17,54 @@ namespace BasicInventoryManagementSystem.Controllers
             _context = context;
         }
 
-         //GET: Sale
+        //GET: Sale
 
-        public IActionResult Index(string? search)
+        //public IActionResult Index(string? search)
+        //{
+        //    // Query the sales table and include the related Product
+        //    var sales = _context.Sales
+        //        .Include(s => s.Product) // Include the related Product
+        //        .AsQueryable();
+        //    if (!string.IsNullOrEmpty(search))
+        //    {
+        //        sales = sales.Where(s => s.Product.Name.Contains(search) ||
+        //                                 s.CategoryName.Contains(search));
+        //    }
+
+        //    return View(sales.ToList());
+        //}
+
+        public IActionResult Index(string? search, int page = 1, int pageSize = 10)
         {
             // Query the sales table and include the related Product
-            var sales = _context.Sales
+            var salesQuery = _context.Sales
                 .Include(s => s.Product) // Include the related Product
                 .AsQueryable();
+
             if (!string.IsNullOrEmpty(search))
             {
-                sales = sales.Where(s => s.Product.Name.Contains(search) ||
-                                         s.CategoryName.Contains(search));
+                salesQuery = salesQuery.Where(s => s.Product.Name.Contains(search) ||
+                                                   s.CategoryName.Contains(search));
             }
 
-            return View(sales.ToList());
+            // Pagination logic
+            var totalSalesCount = salesQuery.Count();
+            var sales = salesQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Create ViewModel to pass data to the view
+            var viewModel = new SaleIndexViewModel
+            {
+                Sales = sales,
+                CurrentPage = page,
+                TotalPages = (int)Math.Ceiling(totalSalesCount / (double)pageSize)
+            };
+
+            return View(viewModel);
         }
+
 
         // GET: Sale/Create
         public IActionResult Create()

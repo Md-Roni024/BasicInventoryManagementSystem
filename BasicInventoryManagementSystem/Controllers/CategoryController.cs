@@ -4,6 +4,7 @@ using System.Linq;
 using BasicInventoryManagementSystem.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using BasicInventoryManagementSystem.ViewModel;
 
 namespace BasicInventoryManagementSystem.Controllers
 {
@@ -23,19 +24,49 @@ namespace BasicInventoryManagementSystem.Controllers
         //    var categories = _context.Categories.ToList();
         //    return View(categories);
         //}
-        public IActionResult Index(string? search)
+        //public IActionResult Index(string? search)
+        //{
+        //    var categories = _context.Categories.AsQueryable();
+
+        //    if (!string.IsNullOrEmpty(search))
+        //    {
+        //        // Filter by name or category
+        //        categories = categories.Where(p => p.CategoryName.Contains(search) ||
+        //                                        p.CategoryName.Contains(search));
+        //    }
+
+        //    return View(categories.ToList());
+        //}
+
+        public IActionResult Index(string? search, int page = 1)
         {
+            int pageSize = 10; // Number of items per page
             var categories = _context.Categories.AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
             {
-                // Filter by name or category
-                categories = categories.Where(p => p.CategoryName.Contains(search) ||
-                                                p.CategoryName.Contains(search));
+                categories = categories.Where(p => p.CategoryName.Contains(search));
             }
 
-            return View(categories.ToList());
+            var paginatedCategories = categories
+                .OrderBy(c => c.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var totalItems = categories.Count();
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            var viewModel = new CategoryIndexViewModel
+            {
+                Categories = paginatedCategories,
+                CurrentPage = page,
+                TotalPages = totalPages
+            };
+
+            return View(viewModel);
         }
+
 
         [Authorize(Roles = "SuperAdmin, Admin")]
         // GET: Categories/Create
