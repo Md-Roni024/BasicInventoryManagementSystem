@@ -5,19 +5,17 @@
 1. [Overview](#overview)
 2. [Features](#features)
 3. [Tools & Technologies](#tools--technologies)
-4. [Project Structure](#project-structure)
-5. [Database Setup](#database-setup)
-6. [Installation and Setup](#installation-and-setup)
-7. [API Endpoints](#api-endpoints)
-8. [Contributing](#contributing)
-9. [Contact](#contact)
-10. [License](#license)
+4. [Installation and Setup](#installation-and-setup)
+5. [Login-Credentials](#login-credentials)
+6. [Contributing](#contributing)
+7. [Contact](#contact)
+8. [License](#license)
 
 ## Overview
 
 Basic Inventory Management System(BIMS) is a software application designed to help businesses track and manage their inventory efficiently. It allows users to monitor stock levels, manage product data, process orders,maintain accurate records of goods. 
 
-## Key Features
+## Features
 
 ### 1. Authentication & Authorization
 - Secure user authentication and registration utilizing the Identity library.
@@ -66,12 +64,12 @@ Basic Inventory Management System(BIMS) is a software application designed to he
 - **Database**: MSSQL
 - **ORM**: Entity Framework
 - **Frontend**: HTML,CSS,Bootstrap & Jquery
-- **logging library**: Serilog
+- **Logging library**: Serilog
+- **Server Manger**: Sql Server Management 20
 - **IDE**: Visual Studio 2022
 
 
 ## Installation and Setup
-
 1. **Clone the Repository**:
    To get a copy of the project, clone the repository using Git
    ```bash
@@ -80,15 +78,31 @@ Basic Inventory Management System(BIMS) is a software application designed to he
 
 2. **Go to Sql Server**:
    ```bash
-   Finde my given database 'Basic_Inventory_Management_System' which is in Backup Database'folder.
+   Finde my given database `Basic_Inventory_Management_System` which is in `Backup Database` folder.
 
-   Now Import it in your database
+   Now Import this in your database
    ```
+3. **Database Connection Configuration**
 
-3. **Navigate to the project directory where program.cs file present**:
+   To connect this project to your Microsoft SQL Server database, follow the steps:
+
+   - Modify the `appsettings.json` file
+
+      Add or update the `ConnectionStrings` section in your `appsettings.json` file to the following:
+
+      ```json
+      "ConnectionStrings": {
+      "DefaultConnection": "Server=RONI\\SQLEXPRESS;Database=Basic_Inventory_Management_System;Trusted_Connection=True;TrustServerCertificate=True;"
+      }
+
+      Server=RONI\\SQLEXPRESS:
+      This specifies the SQL Server instance. Replace "RONI\\SQLEXPRESS" with your machine SQL Server instance name.
+
+      Database=Basic_Inventory_Management_System:
+
+3. **Navigate to the project directory & Open it in Visual Studio**:
    ```bash
    cd BasicInventoryManagementSystem
-   or Go to directory where Program.cs
    ```
 
 4. **Run the Project**:
@@ -96,7 +110,7 @@ Basic Inventory Management System(BIMS) is a software application designed to he
    Run the project using Visual studio run option.
    ```
 
-## User Login Credentials
+## Login-Credentials
    ```bash
     #Super Admin: 100% access
     Email: super@gmail.com
