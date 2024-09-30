@@ -8,61 +8,55 @@
     .table td, .table th {
         text-align: center;
     }
-
     .table tbody tr {
         border-bottom: 2px solid #dadada;
     }
-
     .table {
         border: 2px solid #dadada;
         border-radius: 0.25rem;
     }
-
-        .table thead th {
-            border-bottom: 1.5px solid #dadada;
-            background-color: #acc3e8;
-        }
-
+    .table thead th {
+        border-bottom: 1.5px solid #dadada;
+        background-color: #acc3e8;
+    }
     .search-input {
         width: 300px;
         margin-right: 10px;
     }
-
     .pagination-container {
         display: flex;
         justify-content: flex-end;
         margin-top: 20px;
     }
-
     .pagination {
         display: inline-flex;
         list-style: none;
         padding-left: 0;
     }
 
-        .pagination .page-item {
-            margin: 0 3px;
-        }
+    .pagination .page-item {
+        margin: 0 3px;
+    }
 
-        .pagination .page-link {
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: #007bff;
-            border: 1px solid #007bff;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
+    .pagination .page-link {
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: #007bff;
+        border: 1px solid #007bff;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
 
-            .pagination .page-link:hover {
-                background-color: #0056b3;
-                color: white;
-            }
+    .pagination .page-link:hover {
+        background-color: #0056b3;
+        color: white;
+    }
 
-        .pagination .active .page-link {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
+    .pagination .active .page-link {
+        background-color: #007bff;
+        color: white;
+        border: 1px solid #007bff;
+    }
 </style>
 
 <div class="d-flex justify-content-between mb-3">
@@ -99,7 +93,7 @@
                 <td>@sale.Product?.Name</td>
                 <td>@sale.CategoryName</td>
                 <td>@sale.Quantity</td>
-                <td>@sale.Price.ToString("C")</td>
+                <td>@sale.Price.ToString("C", new System.Globalization.CultureInfo("bn-BD"))</td>
                 <td>@sale.Seller</td>
                 <td>@sale.CreatedDate.ToShortDateString()</td>
                 <td>@sale.UpdatedDate.ToShortDateString()</td>

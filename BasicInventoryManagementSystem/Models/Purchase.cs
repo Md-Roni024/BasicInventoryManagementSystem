@@ -17,7 +17,7 @@ namespace BasicInventoryManagementSystem.Models
 
         [Required]
         [ForeignKey("Category")]
-        public string CategoryName { get; set; } = string.Empty; // Ensure it is not null
+        public string CategoryName { get; set; } = string.Empty;
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1.")]

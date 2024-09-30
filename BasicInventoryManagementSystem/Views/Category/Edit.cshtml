@@ -15,7 +15,7 @@
                     <form asp-action="Edit" method="post">
                         <input type="hidden" asp-for="Id" />
 
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div> <!-- Summary for model errors -->
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div> 
 
                         <div class="mb-3">
                             <label asp-for="CategoryName" class="form-label"></label>
@@ -25,7 +25,7 @@
 
                         <div class="mb-3">
                             <label>Created Date</label>
-                            <p>@Model.CreatedDate.ToString("g")</p> <!-- Display the current CreatedDate without allowing changes -->
+                            <p>@Model.CreatedDate.ToString("g")</p> 
                         </div>
 
                         <div class="mb-3">

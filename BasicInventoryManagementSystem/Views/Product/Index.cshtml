@@ -1,46 +1,39 @@
-﻿@model BasicInventoryManagementSystem.ViewModels.ProductIndexViewModel
+﻿@model BasicInventoryManagementSystem.ViewModel.ProductIndexViewModel
 
 @{
     ViewData["Title"] = "Product List";
 }
 
 <style>
-    /* Your existing styles here */
-
     .pagination-container {
         display: flex;
-        justify-content: flex-end; /* Align pagination to the right */
+        justify-content: flex-end;
         margin-top: 20px;
     }
-    
     .pagination {
-        display: inline-flex; /* Display the pagination items inline */
+        display: inline-flex;
         list-style: none;
-        padding-left: 0; /* Remove default padding */
+        padding-left: 0;
     }
-
     .pagination .page-item {
-        margin: 0 3px; /* Reduced spacing between pagination items */
+        margin: 0 3px;
     }
-
     .pagination .page-link {
-        padding: 5px 10px; /* Smaller padding for a smaller button */
-        border-radius: 5px; /* Rounded corners */
-        color: #007bff; /* Bootstrap primary color */
-        border: 1px solid #007bff; /* Border for the links */
-        text-decoration: none; /* Remove underline */
-        font-size: 0.9rem; /* Slightly smaller font size */
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: #007bff;
+        border: 1px solid #007bff;
+        text-decoration: none;
+        font-size: 0.9rem; 
     }
-
     .pagination .page-link:hover {
-        background-color: #0056b3; /* Darker shade on hover */
-        color: white; /* White text on hover */
+        background-color: #0056b3;
+        color: white; 
     }
-
     .pagination .active .page-link {
-        background-color: #007bff; /* Active page color */
-        color: white; /* White text for active */
-        border: 1px solid #007bff; /* Border remains */
+        background-color: #007bff;
+        color: white;
+        border: 1px solid #007bff;
     }
 </style>
 
@@ -79,7 +72,7 @@
                 <td>@product.Id</td>
                 <td>@product.Name</td>
                 <td>@product.CategoryName</td>
-                <td>@product.Price.ToString("C")</td>
+                <td>@product.Price.ToString("C", new System.Globalization.CultureInfo("bn-BD"))</td>
                 <td>@product.Quantity</td>
                 @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
                 {
@@ -102,7 +95,6 @@
                     <a asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">Previous</a>
                 </li>
             }
-
             @for (int i = 1; i <= Model.TotalPages; i++)
             {
                 if (i == Model.CurrentPage)
@@ -118,7 +110,6 @@
                     </li>
                 }
             }
-
             @if (Model.CurrentPage < Model.TotalPages)
             {
                 <li class="page-item">

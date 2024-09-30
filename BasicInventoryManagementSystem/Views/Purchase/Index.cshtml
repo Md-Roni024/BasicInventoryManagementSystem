@@ -4,10 +4,6 @@
     ViewData["Title"] = "Purchases List";
 }
 
-<style>
-    /* Your existing styles */
-</style>
-
 <div class="d-flex justify-content-between mb-3">
     <h4>Purchases List</h4>
     <div class="d-flex justify-content-between gap-3">
@@ -39,7 +35,7 @@
                 <td>@purchase.Product?.Name</td>
                 <td>@purchase.CategoryName</td>
                 <td>@purchase.Quantity</td>
-                <td>@purchase.Price.ToString("C")</td>
+                <td>@purchase.Price.ToString("C", new System.Globalization.CultureInfo("bn-BD"))</td>
                 <td>@purchase.Supplier</td>
                 <td>@purchase.CreatedDate.ToShortDateString()</td>
                 <td>@purchase.UpdatedDate.ToShortDateString()</td>

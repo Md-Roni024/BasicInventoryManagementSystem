@@ -4,22 +4,33 @@
     ViewData["Title"] = "Purchase Report";
     var currentMonth = DateTime.UtcNow.ToString("MMMM");
     var currentYear = DateTime.UtcNow.Year;
-
-    // Initialize totals
     decimal totalPrice = 0;
     int totalQuantity = 0;
-
-    // Calculate totals
     var purchaseList = Model.ToList();
     if (purchaseList.Any())
     {
         foreach (var purchase in purchaseList)
         {
-            totalPrice += purchase.Price * purchase.Quantity; // Assuming Price is per item
+            totalPrice += purchase.Price * purchase.Quantity;
             totalQuantity += purchase.Quantity;
         }
     }
 }
+<style>
+    h1 {
+        font-size: 2.5rem;
+        color: #24873f;
+    }
+
+    .table th {
+        background-color: #ffc107;
+        color: black;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+</style>
 
 <div class="container mt-5">
     <h1 class="text-center mb-4">Purchase Report for @currentMonth @currentYear</h1>
@@ -29,7 +40,7 @@
             <table class="table table-bordered table-striped table-hover">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Serial No.</th> <!-- Added Serial No. Column -->
+                        <th>Serial No.</th>
                         <th>Product</th>
                         <th>Quantity</th>
                         <th>Price</th>
@@ -39,27 +50,24 @@
                 <tbody>
                     @if (purchaseList != null && purchaseList.Any())
                     {
-                        // Display only the first 10 purchases
-                        int serialNumber = 1; // Initialize serial number
+                        int serialNumber = 1; 
                         foreach (var purchase in purchaseList.Take(10))
                         {
                             <tr>
-                                <td>@serialNumber</td> <!-- Display Serial Number -->
+                                <td>@serialNumber</td>
                                 <td>@purchase.Product?.Name</td>
                                 <td>@purchase.Quantity</td>
                                 <td>@purchase.Price.ToString("C")</td>
                                 <td>@purchase.Supplier</td>
                             </tr>
-                            serialNumber++; // Increment serial number
+                            serialNumber++;
                         }
-
-                        // Add total rows for the displayed items
                         <tr class="font-weight-bold">
                             <td></td>
                             <td></td>
                             <td>Total Quantity: @purchaseList.Take(10).Sum(p => p.Quantity)</td>
                             <td>Total Price: @purchaseList.Take(10).Sum(p => p.Price * p.Quantity).ToString("C")</td>
-                            <td></td> <!-- Empty cell for alignment -->
+                            <td></td>
                         </tr>
                     }
                     else
@@ -78,18 +86,3 @@
     </div>
 </div>
 
-<style>
-    h1 {
-        font-size: 2.5rem;
-        color: #24873f;
-    }
-
-    .table th {
-        background-color: #ffc107; /* Warning color */
-        color: black;
-    }
-
-    .table td {
-        vertical-align: middle;
-    }
-</style>

@@ -14,7 +14,6 @@ namespace BasicInventoryManagementSystem.Controllers
     public class ReportController : Controller
     {
         private readonly ApplicationDbContext _context;
-
         public ReportController(ApplicationDbContext context)
         {
             _context = context;
@@ -63,6 +62,7 @@ namespace BasicInventoryManagementSystem.Controllers
 
             return File(bytes, "text/csv", fileName);
         }
+
 
         // New action for Sale Report
         public IActionResult Sale()
@@ -113,23 +113,20 @@ namespace BasicInventoryManagementSystem.Controllers
         // New action for Product Report
         public IActionResult InventoryStatus()
         {
-            var products = _context.Products.ToList(); // Get all products from the database
-            return View(products); // Pass the products to the view
+            var products = _context.Products.ToList(); 
+            return View(products); 
         }
 
         // New action for downloading the Product CSV report
         public IActionResult DownloadProductReport()
         {
             var products = _context.Products.ToList();
-
-            // Create CSV file content
             var csvBuilder = new StringBuilder();
             csvBuilder.AppendLine("Product Name,Quantity,Price,Created Date");
             foreach (var product in products)
             {
                 csvBuilder.AppendLine($"{product.Name},{product.Quantity},{product.Price},{product.CreatedDate.ToString("g")}");
             }
-
             var currentMonthName = DateTime.UtcNow.ToString("MMMM");
             var currentYear = DateTime.UtcNow.Year;
             var fileName = $"ProductReport-{currentMonthName}-{currentYear}.csv";

@@ -9,7 +9,6 @@ namespace BasicInventoryManagementSystem.Controllers
     public class RolesController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-
         public RolesController(RoleManager<IdentityRole> roleManager)
         {
             _roleManager = roleManager;

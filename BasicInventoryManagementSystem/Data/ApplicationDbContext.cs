@@ -11,7 +11,6 @@ namespace BasicInventoryManagementSystem.Data
         {
             this.Database.SetCommandTimeout(TimeSpan.FromMinutes(5));
         }
-
         public DbSet<Product> Products { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
@@ -21,13 +20,10 @@ namespace BasicInventoryManagementSystem.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            // Unique index for Product Name
             builder.Entity<Product>()
                 .HasIndex(p => p.Name)
                 .IsUnique();
 
-            // Unique index for Category Name
             builder.Entity<Category>()
                 .HasIndex(c => c.CategoryName)
                 .IsUnique();

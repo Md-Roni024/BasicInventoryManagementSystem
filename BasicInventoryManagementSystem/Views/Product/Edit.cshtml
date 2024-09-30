@@ -15,7 +15,6 @@
                     <form asp-action="Edit" method="post">
                         <input type="hidden" asp-for="Id" />
 
-                        <!-- Display general error messages -->
                         @if (!ViewData.ModelState.IsValid)
                         {
                             <div class="alert alert-danger">

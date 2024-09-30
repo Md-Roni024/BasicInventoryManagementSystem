@@ -5,20 +5,16 @@ using BasicInventoryManagementSystem.Data;
 using BasicInventoryManagementSystem.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Configure Serilog
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .WriteTo.Console()
     .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
-// Use Serilog for logging
 builder.Host.UseSerilog();
 
 try
 {
-    // Add services to the container.
     builder.Services.AddControllersWithViews();
 
     // Configure database context
@@ -48,8 +44,6 @@ try
             var context = services.GetRequiredService<ApplicationDbContext>();
             context.Database.Migrate();
             Log.Information("Database migrated successfully");
-
-            // Seed roles
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
             await SeedRoles(roleManager);
         }
