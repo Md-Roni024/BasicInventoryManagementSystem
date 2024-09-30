@@ -70,16 +70,6 @@ Basic Inventory Management System(BIMS) is a software application designed to he
 - **IDE**: Visual Studio 2022
 
 
-
-## Database Setup
-
-1. **Create Database**:
-   ```sql
-   CREATE DATABASE Basic_Inventory_Management_System;
-   ```
-   **Also can Import My Database into Sql Server**
-
-
 ## Installation and Setup
 
 1. **Clone the Repository**:
