@@ -70,6 +70,8 @@ Basic Inventory Management System(BIMS) is a software application designed to he
 
 
 ## Installation and Setup
+- Video on Project Instruction & Full Overview: https://drive.google.com/file/d/1GSWj8IKDI4A5oIqhMbl3ISrauP6R66TH/view?usp=sharing
+
 1. **Clone the Repository**:
    To get a copy of the project, clone the repository using Git
    ```bash
@@ -113,7 +115,7 @@ Basic Inventory Management System(BIMS) is a software application designed to he
 ## Login-Credentials
    ```bash
     #Super Admin: 100% access
-    Email: super@gmail.com
+    Email: superadmin@gmail.com
     Password: super@123
 
     #Admin: Less access than Super admin
